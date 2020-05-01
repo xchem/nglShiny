@@ -1,6 +1,6 @@
 // shameful use of primitive global variables for now
 window.pdbID = "1crn";
-window.representation = "cartoon";
+window.representation = "ball+stick";
 window.colorScheme = "residueIndex";
 //------------------------------------------------------------------------------------------------------------------------
 HTMLWidgets.widget({
@@ -13,38 +13,15 @@ HTMLWidgets.widget({
     return {
        renderValue: function(options) {
           console.log("---- options");
-          console.log(options);
-          window.options = options;	   
+          console.log(options)
           var stage;
-          stage = new NGL.Stage(el, {backgroundColor:'beige'});
+          stage = new NGL.Stage(el);
           window.stage = stage;
-          uri = "rcsb://" + options.pdbID;
+          //uri = "rcsb://" + options.pdbID;
+          uri = options.pdbID;
           window.pdbID = options.pdbID;
           stage.loadFile(uri, {defaultRepresentation: false}).then(function(o){
-	      o.autoView()
-              if(Object.keys(options).indexOf("namedComponents") >= 0){
-                  var namedComponents = options.namedComponents;
-                  var componentNames = Object.keys(namedComponents);
-                  console.log("--- componentNames");
-                  console.log(componentNames);
-		  for (i=0; i < componentNames.length; i++){ 
-                     var name = componentNames[i];
-                     console.log("==== adding rep for " + name);
-                     component = namedComponents[name];
-                     var rep = component.representation;
-		     var selection = component.selection;
-		     var colorScheme = component.colorScheme;
-                     console.log("rep: " + rep);
-                     console.log("selection: " + selection);
-                     console.log("name: " + name);
-                     console.log("colorScheme: " + colorScheme);
-                     o.addRepresentation(rep, {
-                        sele: selection,
-			name: name,
-			colorScheme: colorScheme
-                        })
-                     } // for i
-                  } // if options.namedComponents
+          o.autoView()
               }) // then 
           },
        resize: function(width, height) {
@@ -72,7 +49,7 @@ function setComponentNames(x, namedComponents)
      console.log("name '" + name + "' for '" + selectionString + "' rep: " + rep)
      debugger;
      //stage.getComponentsByName(window.pdbID).addRepresentation(rep, {sele: selectionString,
-     //								     name: name})
+     //                                  name: name})
      } // for name
    
    //component.addRepresentation('ball+stick', {name: 'ligand', sele: 'ligand'})
@@ -82,15 +59,20 @@ function setComponentNames(x, namedComponents)
 //------------------------------------------------------------------------------------------------------------------------
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("fit", function(message){
 
-    console.log("nglShiny fit")
-    stage.autoView()
-    })
+    console.log("nglShiny fit");
+    stage.autoView();
+    });
+
+if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("ligfit", function(message){
+
+    console.log("nglShiny fit");
+    stage.autoView('LIG');
+    });
 
 //------------------------------------------------------------------------------------------------------------------------
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("removeAllRepresentations", function(message){
-
-   if(typeof(stage) != "undefined")
-      stage.getComponentsByName(window.pdbID).list[0].removeAllRepresentations()
+    stage.getComponentsByName(window.pdbID).list[0].removeAllRepresentations()
+    stage.getComponentsByName(window.pdbID).list[1].removeAllRepresentations()
     })
 
 //------------------------------------------------------------------------------------------------------------------------
@@ -116,35 +98,49 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setColorScheme", functi
 //------------------------------------------------------------------------------------------------------------------------
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB", function(message){
 
-   //debugger;
-
-   if(typeof(stage) != "undefined")
-      stage.removeAllComponents()
-
-    var uri = message.uri;
-    console.log(" about to loadFile: " + uri);
-    stage.loadFile(uri, {ext: "pdb", defaultRepresentation: true}).then(function(o){
-        o.autoView()
-        stage.autoView()
-        })
-    //stage.loadFile(uri).then(function(comp){
-    //  comp.addRepresentation("cartoon", {colorScheme: "residueIndex"});
-    //  })
-    //stage.getComponentsByName(window.pdbID).addRepresentation(window.representation, {colorScheme: window.colorScheme})
-    //stage.autoView()
+    stage.removeAllComponents()
+    window.pdbID = message[0];
+    console.log("nglShiny setPDB: " + window.pdbID)
+    //var url = "rcsb://" + window.pdbID;
+    var url = window.pdbID;
+    stage.loadFile(url).then(function(comp){
+      comp.addRepresentation("licorice", {colorScheme: "residueIndex"});
+      })
+       // redundant?
+    stage.getComponentsByName(window.pdbID).addRepresentation(window.representation, {colorScheme: window.colorScheme})
+    stage.autoView()
     })
 
-if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setLocalPDB", function(message){
-    // Add PBDs from local sources, convert pdb file into a single long string in R and send it as message
-    if(typeof(stage) != "undefined")
-       stage.removeAllComponents()
 
-    var uri = message[0] // Noticed that the structure is changed but will otherwise keep it with what I know works
-    var stringBlob = new Blob( [ uri ], { type: 'text/plain'} );
+if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB2", function(message){
+    stage.removeAllComponents();
+    // Assumption, message is R list of n objects
+    var pdb = message[0];
+    var stringBlob = new Blob( [ pdb ], { type: 'text/plain'} );
     console.log("nglShiny setPDB:");
-    stage.loadFile(stringBlob, {ext: "pdb", defaultRepresentation: true}).then(function (o) {
-      o.auto.View()
+    stage.loadFile(stringBlob, { ext: "pdb" }).then(function (comp) {
+      comp.addRepresentation("ball+stick");
+      comp.autoView("LIG");
+      comp.setParametes({'clipNear':42, 'clipFar':100, 'clipDist': 10, 'fogNear':50, 'fogFar':62});
+
     });
+});
+
+if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addEvent", function(message){
+  var byteCharacters = atob(message);
+  var byteNumbers = new Array(byteCharacters.length);
+  for (let i = 0; i < byteCharacters.length; i++) {
+    byteNumbers[i] = byteCharacters.charCodeAt(i);
+  };
+  var byteArray = new Uint8Array(byteNumbers);
+  var blob = new Blob([byteArray], {type: 'application/octet-binary'});
+    stage.loadFile( blob, { ext: "ccp4" } ).then(function (comp) {
+      comp.addRepresentation("surface", { color: 'skyblue', isolevel: 1.5, boxSize:10, useWorker: false, contour:true
+      });
+    });
+    // redundant?
+    //stage.getComponentsByName(window.pdbID).addRepresentation(window.representation, {colorScheme: window.colorScheme})
+    //stage.autoView()
 });
 
 //------------------------------------------------------------------------------------------------------------------------
