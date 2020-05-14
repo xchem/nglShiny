@@ -17,6 +17,7 @@ HTMLWidgets.widget({
           var stage;
           stage = new NGL.Stage(el);
           window.stage = stage;
+
           //uri = "rcsb://" + options.pdbID;
           uri = options.pdbID;
           window.pdbID = options.pdbID;
@@ -121,13 +122,21 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB2", function(mess
     stage.loadFile(stringBlob, { ext: "pdb" }).then(function (comp) {
       comp.addRepresentation("ball+stick", {sele: "not (water or ion)"}); //, {sele: "ATOM"}); // Only show what is in protein
       comp.addRepresentation("ball+stick", 
-        {sele: "LIG", 
-         aspectRatio: 3//,
-          //color: "tomato",
-          }); // Only show what is in ligand
+        {
+        sele: "LIG", 
+        aspectRatio: 3//,
+        colorValue: "tomato",
+        }); // Only show what is in ligand
       comp.addRepresentation("contact", {sele: "not (water or ion)"});
       comp.autoView("LIG");
-      comp.setParameters({'clipNear':42, 'clipFar':100, 'clipDist': 10, 'fogNear':50, 'fogFar':62});      
+      comp.setParameters(
+        {
+        clipNear:42, 
+        clipFar:100, 
+        clipDist: 10, 
+        fogNear:50, 
+        fogFar:62
+      });      
     });
 });
 
