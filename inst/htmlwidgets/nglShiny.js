@@ -104,7 +104,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB", function(messa
     //var url = "rcsb://" + window.pdbID;
     var url = window.pdbID;
     stage.loadFile(url).then(function(comp){
-      comp.addRepresentation("licorice", {colorScheme: "residueIndex"});
+      comp.addRepresentation("ball+stick", {colorScheme: "residueIndex"});
       })
        // redundant?
     stage.getComponentsByName(window.pdbID).addRepresentation(window.representation, {colorScheme: window.colorScheme})
