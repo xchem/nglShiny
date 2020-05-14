@@ -119,11 +119,11 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB2", function(mess
     var stringBlob = new Blob( [ pdb ], { type: 'text/plain'} );
     console.log("nglShiny setPDB2:");
     stage.loadFile(stringBlob, { ext: "pdb" }).then(function (comp) {
-      comp.setParameters({'clipNear':42, 'clipFar':100, 'clipDist': 10, 'fogNear':50, 'fogFar':62});
-      comp.addRepresentation("ball+stick", {sele: "protein"}); 
-      comp.addRepresentation("ball+stick", {sele: "ligand"});
+      comp.addRepresentation("ball+stick", {sele: "ATOM"}); // Only show what is in protein
+      comp.addRepresentation("ball+stick", {sele: "LIG", color: "tomato"}); // Only show what is in ligand
       comp.addRepresentation("contact");
-      comp.autoView("LIG");      
+      comp.autoView("LIG");
+      comp.setParameters({'clipNear':42, 'clipFar':100, 'clipDist': 10, 'fogNear':50, 'fogFar':62});      
     });
 });
 
