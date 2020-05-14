@@ -119,7 +119,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB2", function(mess
     var stringBlob = new Blob( [ pdb ], { type: 'text/plain'} );
     console.log("nglShiny setPDB:");
     stage.loadFile(stringBlob, { ext: "pdb" }).then(function (comp) {
-      comp.addRepresentation("ball+stick");
+      comp.addRepresentation("ball+stick"); 
       //comp.addRepresentation("ball+stick", {sele: "ligand", multipleBond: 'symmetric'});
       comp.addRepresentation("contact");
       comp.autoView("LIG");
