@@ -121,11 +121,14 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB2", function(mess
     console.log("nglShiny setPDB2:");
     stage.setParameters(
       {
-        clipNear:42, 
-        clipFar:100, 
-        clipDist:10, 
-        fogNear:50, 
-        fogFar:62
+        'clipNear':42, 
+        'clipFar':100, 
+        'clipDist':10, 
+        'fogNear':50, 
+        'fogFar':62,
+        'cameraType':'perspective',
+        'mousePreset':'coot'
+
       }
     );  
     stage.loadFile(stringBlob, { ext: "pdb" }).then(function (comp) {
