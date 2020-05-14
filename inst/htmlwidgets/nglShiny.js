@@ -122,7 +122,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB2", function(mess
       comp.addRepresentation("ball+stick", {sele: "sidechainAttached"});
       comp.addRepresentation("ball+stick", {sele: "ligand"});
       comp.autoView("LIG");
-      comp.setParametes({'clipNear':42, 'clipFar':60, 'clipDist': 10, 'fogNear':50, 'fogFar':62});
+      comp.setParameters({'clipNear':42, 'clipFar':100, 'clipDist': 10, 'fogNear':50, 'fogFar':62});
 
     });
 });
