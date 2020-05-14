@@ -125,7 +125,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB2", function(mess
       comp.addRepresentation("ball+stick", 
         {
         sele: "LIG", 
-        aspectRatio: 3//,
+        aspectRatio: 3,//,
         colorValue: "tomato"
         }); // Only show what is in ligand
       comp.addRepresentation("contact", {sele: "not (water or ion)"});
