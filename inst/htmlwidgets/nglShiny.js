@@ -119,11 +119,9 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB2", function(mess
     var stringBlob = new Blob( [ pdb ], { type: 'text/plain'} );
     console.log("nglShiny setPDB:");
     stage.loadFile(stringBlob, { ext: "pdb" }).then(function (comp) {
-      comp.addRepresentation("tube", {radius: 'sstruc'});
-      comp.addRepresentation("ball+stick", {sele: 'sidechainAttached'})
-      //comp.addRepresentation("ball+stick", {sele: "protein"});
-      comp.addRepresentation("ball+stick", {sele: "ligand", multipleBond: 'symmetric'});
-      comp.addRepresentation("contact")
+      comp.addRepresentation("ball+stick");
+      //comp.addRepresentation("ball+stick", {sele: "ligand", multipleBond: 'symmetric'});
+      comp.addRepresentation("contact");
       comp.autoView("LIG");
       comp.setParameters({'clipNear':42, 'clipFar':100, 'clipDist': 10, 'fogNear':50, 'fogFar':62});
 
