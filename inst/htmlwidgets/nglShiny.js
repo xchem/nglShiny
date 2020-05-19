@@ -1,5 +1,6 @@
 // shameful use of primitive global variables for now 
 window.pdbID = "1crn";
+window.event = "event";
 window.representation = "ball+sitck";
 window.colorScheme = "residueIndex";
 //------------------------------------------------------------------------------------------------------------------------
@@ -85,6 +86,27 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setRepresentation", fun
     stage.getComponentsByName(window.pdbID).addRepresentation(rep)
     })
 
+//-------------------- 
+if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("updateParams", function(message){
+  console.log("nglShiny updateParams")
+  var clipDist = message[0];
+  var clipNear = message[1];
+  var clipFar  = message[2];
+  var fogNear  = message[3];
+  var fogFar   = message[4];
+  stage.getComponentsByName(window.pdbID).setParameters({
+    'clipDist': clipDist,
+    'clipNear': clipNear,
+    'clipFar': clipFar,
+    'fogNear': fogNear,
+    'fogFar': fogFar
+  });
+})
+
+if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("twiddleISO", function(message){
+  update_representation(component=shell, {isolevel: message[0]})
+})
+
 //------------------------------------------------------------------------------------------------------------------------
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setColorScheme", function(message){
 
@@ -98,7 +120,6 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setColorScheme", functi
 
 //------------------------------------------------------------------------------------------------------------------------
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB", function(message){
-
     stage.removeAllComponents()
     window.pdbID = message[0];
     console.log("nglShiny setPDB: " + window.pdbID)
@@ -117,6 +138,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB2", function(mess
     stage.removeAllComponents();
     // Assumption, message is R list of n objects
     var pdb = message[0];
+    var window.pdbID = 'structure'
     var stringBlob = new Blob( [ pdb ], { type: 'text/plain'} );
     console.log("nglShiny setPDB2:");
     stage.setParameters({'clipNear':42, 'clipFar':100, 'clipDist':10, 'fogNear':50, 'fogFar':62});  
@@ -135,6 +157,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB2", function(mess
 });
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addEvent", function(message){
+  var window.event = message
   var byteCharacters = atob(message);
   var byteNumbers = new Array(byteCharacters.length);
   for (let i = 0; i < byteCharacters.length; i++) {
@@ -143,7 +166,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addEvent", function(mes
   var byteArray = new Uint8Array(byteNumbers);
   var blob = new Blob([byteArray], {type: 'application/octet-binary'});
     stage.loadFile( blob, { ext: "ccp4" } ).then(function (comp) {
-      comp.addRepresentation("surface", { color: 'skyblue', isolevel: 1.5, boxSize:10, useWorker: false, contour:true
+      shell = comp.addRepresentation("surface", { color: 'skyblue', isolevel: 1.5, boxSize:10, useWorker: false, contour:true
       });
     });
     // redundant?
