@@ -101,10 +101,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("updateParams", function
     'fogNear': fogNear,
     'fogFar': fogFar
   });
-})
-
-if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("twiddleISO", function(message){
-  update_representation(component=shell, {isolevel: message[0]})
+  stage.autoView('LIG')
 })
 
 //------------------------------------------------------------------------------------------------------------------------
@@ -158,7 +155,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB2", function(mess
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addEvent", function(message){
   //var window.event = message;
-  var byteCharacters = atob(message);
+  var byteCharacters = atob(message[0]);
   var byteNumbers = new Array(byteCharacters.length);
   for (let i = 0; i < byteCharacters.length; i++) {
     byteNumbers[i] = byteCharacters.charCodeAt(i);
@@ -166,7 +163,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addEvent", function(mes
   var byteArray = new Uint8Array(byteNumbers);
   var blob = new Blob([byteArray], {type: 'application/octet-binary'});
     stage.loadFile( blob, { ext: "ccp4" } ).then(function (comp) {
-      shell = comp.addRepresentation("surface", { color: 'skyblue', isolevel: 1.5, boxSize:10, useWorker: false, contour:true});
+      shell = comp.addRepresentation("surface", { color: 'skyblue', isolevel: parseFloat(message[1]), boxSize:10, useWorker: false, contour:true});
     });
     // redundant?
     //stage.getComponentsByName(window.pdbID).addRepresentation(window.representation, {colorScheme: window.colorScheme})
