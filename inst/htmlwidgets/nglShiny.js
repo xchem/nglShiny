@@ -101,7 +101,6 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("updateParams", function
     'fogNear': fogNear,
     'fogFar': fogFar
   });
-  stage.autoView('LIG')
 })
 
 //------------------------------------------------------------------------------------------------------------------------
@@ -138,7 +137,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB2", function(mess
     //var window.pdbID = 'structure';
     var stringBlob = new Blob( [ pdb ], { type: 'text/plain'} );
     console.log("nglShiny setPDB2:");
-    stage.setParameters({'clipNear':42, 'clipFar':100, 'clipDist':10, 'fogNear':50, 'fogFar':62});  
+    stage.setParameters({'clipNear':parseFloat(message[2]), 'clipFar':parseFloat(message[3]), 'clipDist':parseFloat(message[1]), 'fogNear':parseFloat(message[4]), 'fogFar':parseFloat(message[5])});  
     stage.loadFile(stringBlob, { ext: "pdb" }).then(function (comp) {
       comp.addRepresentation("ball+stick", {sele: "not (water or ion)"}); //, {sele: "ATOM"}); // Only show what is in protein
       comp.addRepresentation("ball+stick", 
