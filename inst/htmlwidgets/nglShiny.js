@@ -104,7 +104,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("updateParams", function
 })
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("twiddleISO", function(message){
-  update_representation(component=shell, {isolevel: message[0]});
+  update_representation(component=shell, {isolevel: message[0]})
 })
 
 //------------------------------------------------------------------------------------------------------------------------
@@ -120,9 +120,9 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setColorScheme", functi
 
 //------------------------------------------------------------------------------------------------------------------------
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB", function(message){
-    stage.removeAllComponents();
+    stage.removeAllComponents()
     window.pdbID = message[0];
-    console.log("nglShiny setPDB: " + window.pdbID);
+    console.log("nglShiny setPDB: " + window.pdbID)
     //var url = "rcsb://" + window.pdbID;
     var url = window.pdbID;
     stage.loadFile(url).then(function(comp){
@@ -138,7 +138,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB2", function(mess
     stage.removeAllComponents();
     // Assumption, message is R list of n objects
     var pdb = message[0];
-    var window.pdbID = 'structure';
+    //var window.pdbID = 'structure';
     var stringBlob = new Blob( [ pdb ], { type: 'text/plain'} );
     console.log("nglShiny setPDB2:");
     stage.setParameters({'clipNear':42, 'clipFar':100, 'clipDist':10, 'fogNear':50, 'fogFar':62});  
@@ -157,7 +157,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB2", function(mess
 });
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addEvent", function(message){
-  var window.event = message;
+  //var window.event = message;
   var byteCharacters = atob(message);
   var byteNumbers = new Array(byteCharacters.length);
   for (let i = 0; i < byteCharacters.length; i++) {
