@@ -94,7 +94,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("updateParams", function
   var clipFar  = message[2];
   var fogNear  = message[3];
   var fogFar   = message[4];
-  stage.getComponentsByName(window.pdbID).setParameters({
+  stage.setParameters({
     'clipDist': clipDist,
     'clipNear': clipNear,
     'clipFar': clipFar,
