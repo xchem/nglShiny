@@ -154,7 +154,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB2", function(mess
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addEvent", function(message){
   //var window.event = message;
-  var isTrueSet = (messgae[3] === 'true');
+  var isTrueSet = (message[3] === 'true');
   var byteCharacters = atob(message[0]);
   var byteNumbers = new Array(byteCharacters.length);
   for (let i = 0; i < byteCharacters.length; i++) {
