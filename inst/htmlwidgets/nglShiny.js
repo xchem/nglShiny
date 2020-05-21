@@ -165,7 +165,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addEvent", function(mes
     stage.loadFile( blob, { ext: "ccp4" } ).then(function (comp) {
       shell = comp.addRepresentation("surface", { color: message[2], 
                                                   isolevel: parseFloat(message[1]), 
-                                                  negateIsolevel: istrueSet ,
+                                                  negateIsolevel: isTrueSet ,
                                                   boxSize:10, useWorker: false, contour:true});
     });
     // redundant?
