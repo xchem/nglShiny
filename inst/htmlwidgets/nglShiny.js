@@ -73,8 +73,13 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("ligfit", function(messa
 
 //------------------------------------------------------------------------------------------------------------------------
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("removeAllRepresentations", function(message){
+
     stage.getComponentsByName(window.pdbID).list[0].removeAllRepresentations()
     stage.getComponentsByName(window.pdbID).list[1].removeAllRepresentations()
+    })
+
+if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("removeAllComponents", function(message){
+    stage.removeAllComponents()
     })
 
 //------------------------------------------------------------------------------------------------------------------------
