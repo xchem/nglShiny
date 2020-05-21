@@ -154,6 +154,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB2", function(mess
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addEvent", function(message){
   //var window.event = message;
+  var isTrueSet = (messgae[3] === 'true');
   var byteCharacters = atob(message[0]);
   var byteNumbers = new Array(byteCharacters.length);
   for (let i = 0; i < byteCharacters.length; i++) {
@@ -162,7 +163,10 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addEvent", function(mes
   var byteArray = new Uint8Array(byteNumbers);
   var blob = new Blob([byteArray], {type: 'application/octet-binary'});
     stage.loadFile( blob, { ext: "ccp4" } ).then(function (comp) {
-      shell = comp.addRepresentation("surface", { color: 'skyblue', isolevel: parseFloat(message[1]), boxSize:10, useWorker: false, contour:true});
+      shell = comp.addRepresentation("surface", { color: message[2], 
+                                                  isolevel: parseFloat(message[1]), 
+                                                  negativeIsolevel: istrueSet ,
+                                                  boxSize:10, useWorker: false, contour:true});
     });
     // redundant?
     //stage.getComponentsByName(window.pdbID).addRepresentation(window.representation, {colorScheme: window.colorScheme})
