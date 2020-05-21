@@ -144,7 +144,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB2", function(mess
         {
         sele: "LIG", 
         //aspectRatio: 3,//,
-        colorValue: "tomato"
+        colorValue: "limegreen"
         }); // Only show what is in ligand
       comp.addRepresentation("contact", {sele: "not (water or ion)"});
       comp.autoView("LIG");  
