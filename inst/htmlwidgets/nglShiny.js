@@ -167,7 +167,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addEvent", function(mes
   };
   var byteArray = new Uint8Array(byteNumbers);
   var blob = new Blob([byteArray], {type: 'application/octet-binary'});
-    stage.loadFile( blob, { ext: "ccp4" } ).then(function (comp) {
+    stage.loadFile( blob, { ext: message[4] } ).then(function (comp) {
       shell = comp.addRepresentation("surface", { color: message[2], 
                                                   isolevel: parseFloat(message[1]), 
                                                   negateIsolevel: isTrueSet ,
