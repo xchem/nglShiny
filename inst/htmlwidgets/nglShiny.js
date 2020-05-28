@@ -171,7 +171,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addEvent", function(mes
       shell = comp.addRepresentation("surface", { color: message[2], 
                                                   isolevel: parseFloat(message[1]), 
                                                   negateIsolevel: isTrueSet ,
-                                                  boxSize:10, useWorker: false, contour:true});
+                                                  boxSize:0, useWorker: false, contour:true});
     });
     // redundant?
     //stage.getComponentsByName(window.pdbID).addRepresentation(window.representation, {colorScheme: window.colorScheme})
