@@ -104,7 +104,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("updateParams", function
     'clipNear': clipNear,
     'clipFar': clipFar,
     'fogNear': fogNear,
-    'fogFar': fogFar
+    'fogFar': fogFar,
   });
 })
 
