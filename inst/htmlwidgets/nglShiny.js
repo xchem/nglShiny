@@ -149,17 +149,14 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB2", function(mess
       comp.addRepresentation("ball+stick", 
         {
         sele: "LIG", 
-        //aspectRatio: 3,//,
         colorValue: "limegreen"
         }); // Only show what is in ligand
       comp.addRepresentation("contact", {sele: "not (water or ion)"});
       comp.autoView("LIG");  
-      //comp.setParameters({'clipNear':42, 'clipFar':100, 'clipDist':10, 'fogNear':50, 'fogFar':62});   
     });
 });
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addEvent", function(message){
-  //var window.event = message;
   var isTrueSet = (message[3] === 'true');
   var byteCharacters = atob(message[0]);
   var byteNumbers = new Array(byteCharacters.length);
@@ -169,15 +166,87 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addEvent", function(mes
   var byteArray = new Uint8Array(byteNumbers);
   var blob = new Blob([byteArray], {type: 'application/octet-binary'});
     stage.loadFile( blob, { ext: message[4] } ).then(function (comp) {
-      shell = comp.addRepresentation("surface", { color: message[2], 
+      window.event = comp.addRepresentation("surface", { color: message[2], 
                                                   isolevel: parseFloat(message[1]), 
                                                   negateIsolevel: isTrueSet,
                                                   boxSize:parseFloat(message[5]), useWorker: false, contour:true, wrap:true});
     });
-    // redundant?
-    //stage.getComponentsByName(window.pdbID).addRepresentation(window.representation, {colorScheme: window.colorScheme})
-    //stage.autoView()
 });
+
+if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("add2fofc", function(message){
+  var isTrueSet = (message[3] === 'true');
+  var byteCharacters = atob(message[0]);
+  var byteNumbers = new Array(byteCharacters.length);
+  for (let i = 0; i < byteCharacters.length; i++) {
+    byteNumbers[i] = byteCharacters.charCodeAt(i);
+  };
+  var byteArray = new Uint8Array(byteNumbers);
+  var blob = new Blob([byteArray], {type: 'application/octet-binary'});
+    stage.loadFile( blob, { ext: message[4] } ).then(function (comp) {
+      window.twofofc = comp.addRepresentation("surface", { color: message[2], 
+                                                  isolevel: parseFloat(message[1]), 
+                                                  negateIsolevel: isTrueSet,
+                                                  boxSize:parseFloat(message[5]), useWorker: false, contour:true, wrap:true});
+    });
+});
+
+if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addfofc", function(message){
+  var isTrueSet = (message[3] === 'true');
+  var byteCharacters = atob(message[0]);
+  var byteNumbers = new Array(byteCharacters.length);
+  for (let i = 0; i < byteCharacters.length; i++) {
+    byteNumbers[i] = byteCharacters.charCodeAt(i);
+  };
+  var byteArray = new Uint8Array(byteNumbers);
+  var blob = new Blob([byteArray], {type: 'application/octet-binary'});
+    stage.loadFile( blob, { ext: message[4] } ).then(function (comp) {
+      window.fofc = comp.addRepresentation("surface", { color: message[2], 
+                                                  isolevel: parseFloat(message[1]), 
+                                                  negateIsolevel: false,
+                                                  boxSize:parseFloat(message[5]), useWorker: false, contour:true, wrap:true});
+    });
+}); 
+
+if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addfofc_negative", function(message){
+  var isTrueSet = (message[3] === 'true');
+  var byteCharacters = atob(message[0]);
+  var byteNumbers = new Array(byteCharacters.length);
+  for (let i = 0; i < byteCharacters.length; i++) {
+    byteNumbers[i] = byteCharacters.charCodeAt(i);
+  };
+  var byteArray = new Uint8Array(byteNumbers);
+  var blob = new Blob([byteArray], {type: 'application/octet-binary'});
+    stage.loadFile( blob, { ext: message[4] } ).then(function (comp) {
+      window.fofcneg = comp.addRepresentation("surface", { color: message[2], 
+                                                  isolevel: parseFloat(message[1]), 
+                                                  negateIsolevel: true,
+                                                  boxSize:parseFloat(message[5]), useWorker: false, contour:true, wrap:true});
+    });
+}); 
+
+if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("twiddleEvent", function(message){
+  window.event.setParameters({isolevel:parseFloat(message[0]),
+                            boxSize:parseFloat(message[1])
+                            });
+})
+
+if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("twiddle2fofc", function(message){
+  window.twofofc.setParameters({isolevel:parseFloat(message[0]),
+                            boxSize:parseFloat(message[1])
+                            });
+})
+
+if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("twiddlefofc", function(message){
+  window.fofc.setParameters({isolevel:parseFloat(message[0]),
+                            boxSize:parseFloat(message[1])
+                            });
+})
+
+if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("twiddlefofc_negative", function(message){
+  window.fofcneg.setParameters({isolevel:parseFloat(message[0]),
+                            boxSize:parseFloat(message[1])
+                            });
+})
 
 //------------------------------------------------------------------------------------------------------------------------
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("select", function(message){
