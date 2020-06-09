@@ -248,6 +248,14 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("twiddlefofc_negative", 
                             });
 })
 
+
+if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("updateVisabilities", function(message){
+  window.event.setVisibility((message[0] === 'true'))
+  window.twofofc.setVisibility((message[1] === 'true'))
+  window.fofc.setVisibility((message[2] === 'true'))
+  window.fofcneg.setVisibility((message[3] === 'true'))
+})
+
 //------------------------------------------------------------------------------------------------------------------------
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("select", function(message){
 
