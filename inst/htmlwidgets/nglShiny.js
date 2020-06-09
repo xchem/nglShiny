@@ -66,9 +66,9 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("fit", function(message)
     });
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("ligfit", function(message){
-
-    console.log("nglShiny fit");
-    stage.autoView('LIG');
+    var stringBlob = new Blob( [ window.pdbID ], { type: 'text/plain'} );
+    stage.loadFile(stringBlob, { ext: "pdb" }).then(function (comp) {
+      comp.autoView("LIG");    
     });
 
 //------------------------------------------------------------------------------------------------------------------------
@@ -139,7 +139,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB2", function(mess
     stage.removeAllComponents();
     // Assumption, message is R list of n objects
     var pdb = message[0];
-    //var window.pdbID = 'structure';
+    var window.pdbID = pdb;
     var stringBlob = new Blob( [ pdb ], { type: 'text/plain'} );
     console.log("nglShiny setPDB2:");
     stage.setParameters({'clipNear':parseFloat(message[2]), 'clipFar':parseFloat(message[3]), 'clipDist':parseFloat(message[1]), 'fogNear':parseFloat(message[4]), 'fogFar':parseFloat(message[5])});  
