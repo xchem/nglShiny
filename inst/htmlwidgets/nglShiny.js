@@ -70,6 +70,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("ligfit", function(messa
     stage.loadFile(stringBlob, { ext: "pdb" }).then(function (comp) {
       comp.autoView("LIG");    
     });
+  })
 
 //------------------------------------------------------------------------------------------------------------------------
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("removeAllRepresentations", function(message){
