@@ -190,7 +190,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("add2fofc", function(mes
     });
 });
 
-if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addfofc", function(message){
+if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addfofc_positive", function(message){
   var isTrueSet = (message[3] === 'true');
   var byteCharacters = atob(message[0]);
   var byteNumbers = new Array(byteCharacters.length);
@@ -200,7 +200,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addfofc", function(mess
   var byteArray = new Uint8Array(byteNumbers);
   var blob = new Blob([byteArray], {type: 'application/octet-binary'});
     stage.loadFile( blob, { ext: message[4] } ).then(function (comp) {
-      window.fofc = comp.addRepresentation("surface", { color: message[2], 
+      window.fofcpos = comp.addRepresentation("surface", { color: message[2], 
                                                   isolevel: parseFloat(message[1]), 
                                                   negateIsolevel: false,
                                                   boxSize:parseFloat(message[5]), useWorker: false, contour:true, wrap:true});
@@ -236,8 +236,8 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("twiddle2fofc", function
                             });
 })
 
-if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("twiddlefofc", function(message){
-  window.fofc.setParameters({isolevel:parseFloat(message[0]),
+if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("twiddlefofc_positive", function(message){
+  window.fofcpos.setParameters({isolevel:parseFloat(message[0]),
                             boxSize:parseFloat(message[1])
                             });
 })
@@ -252,7 +252,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("twiddlefofc_negative", 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("updateVisabilities", function(message){
   window.event.setVisibility((message[0] === 'true'))
   window.twofofc.setVisibility((message[1] === 'true'))
-  window.fofc.setVisibility((message[2] === 'true'))
+  window.fofcpos.setVisibility((message[2] === 'true'))
   window.fofcneg.setVisibility((message[3] === 'true'))
 })
 
