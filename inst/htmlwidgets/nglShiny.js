@@ -171,6 +171,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addEvent", function(mes
                                                   negateIsolevel: isTrueSet,
                                                   boxSize:parseFloat(message[5]), useWorker: false, contour:true, wrap:true});
     });
+  window.event.setVisibility(false)
 });
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("add2fofc", function(message){
@@ -188,6 +189,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("add2fofc", function(mes
                                                   negateIsolevel: isTrueSet,
                                                   boxSize:parseFloat(message[5]), useWorker: false, contour:true, wrap:true});
     });
+  window.twofofc.setVisibility(false)
 });
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addfofc_positive", function(message){
@@ -205,6 +207,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addfofc_positive", func
                                                   negateIsolevel: false,
                                                   boxSize:parseFloat(message[5]), useWorker: false, contour:true, wrap:true});
     });
+  window.fofcpos.setVisibility(false)
 }); 
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addfofc_negative", function(message){
@@ -222,6 +225,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addfofc_negative", func
                                                   negateIsolevel: true,
                                                   boxSize:parseFloat(message[5]), useWorker: false, contour:true, wrap:true});
     });
+  window.fofcneg.setVisibility(false)
 }); 
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("twiddleEvent", function(message){
