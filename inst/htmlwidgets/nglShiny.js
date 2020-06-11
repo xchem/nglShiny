@@ -150,7 +150,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB2", function(mess
         {
         sele: "LIG", 
         colorValue: "limegreen",
-        multipleBond: "symmetric",
+        multipleBond: "symmetric"
         }); // Only show what is in ligand
       comp.addRepresentation("contact", {sele: "not (water or ion)"});
       comp.autoView("LIG");  
