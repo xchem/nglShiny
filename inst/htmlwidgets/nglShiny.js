@@ -227,7 +227,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addfofc_negative", func
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("updateAssembly", function(message){
   console.log("Update Assembly to" + message[0])
   window.struc.setParameters({assembly:message[0]});
-  window.ligand.setParameters({colorValue: "limegreen", multipleBond: "symmetric"})
+  window.ligand.setParameters({colorValue: "limegreen"})
 })
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("twiddleEvent", function(message){
