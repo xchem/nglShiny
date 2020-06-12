@@ -145,7 +145,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB2", function(mess
     console.log("Uploading PDB")
     stage.setParameters({'clipNear':parseFloat(message[2]), 'clipFar':parseFloat(message[3]), 'clipDist':parseFloat(message[1]), 'fogNear':parseFloat(message[4]), 'fogFar':parseFloat(message[5])});  
     stage.loadFile(stringBlob, { ext: "pdb" }).then(function (comp) {
-      window.struc = comp.addRepresentation("ball+stick", {assembly: 'UNITCELL'}); 
+      window.struc = comp.addRepresentation("ball+stick"); 
       window.ligand = comp.addRepresentation("ball+stick", {sele: "LIG", colorValue: "limegreen", multipleBond: "symmetric"}); 
       comp.addRepresentation("contact", {sele: "not (water or ion)"});
       comp.autoView("LIG");  
@@ -227,6 +227,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addfofc_negative", func
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("updateAssembly", function(message){
   console.log("Update Assembly to" + message[0])
   window.struc.setParameters({assembly:message[0]});
+  window.ligand.setParameters({colorValue: "limegreen", multipleBond: "symmetric"})
 })
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("twiddleEvent", function(message){
