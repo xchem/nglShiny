@@ -220,6 +220,11 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addfofc_negative", func
     });
 }); 
 
+if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("updateAssembly", function(message){
+  window.struc.setParameters({assembly:message[0],
+                            });
+})
+
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("twiddleEvent", function(message){
   window.event.setParameters({isolevel:parseFloat(message[0]),
                             boxSize:parseFloat(message[1])
