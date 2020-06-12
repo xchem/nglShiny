@@ -142,7 +142,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB2", function(mess
     var pdb = message[0];
     window.pdbID = pdb;
     var stringBlob = new Blob( [ pdb ], { type: 'text/plain'} );
-    console.log("nglShiny setPDB2:");
+    console.log("Uploading PDB")
     stage.setParameters({'clipNear':parseFloat(message[2]), 'clipFar':parseFloat(message[3]), 'clipDist':parseFloat(message[1]), 'fogNear':parseFloat(message[4]), 'fogFar':parseFloat(message[5])});  
     stage.loadFile(stringBlob, { ext: "pdb" }).then(function (comp) {
       window.struc = comp.addRepresentation("ball+stick", {assembly: 'UNITCELL'}); 
@@ -160,6 +160,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addEvent", function(mes
     byteNumbers[i] = byteCharacters.charCodeAt(i);
   };
   var byteArray = new Uint8Array(byteNumbers);
+  console.log("Uploading Event Map")
   var blob = new Blob([byteArray], {type: 'application/octet-binary'});
     stage.loadFile( blob, { ext: message[4] } ).then(function (comp) {
       window.event = comp.addRepresentation("surface", { color: message[2], 
@@ -178,6 +179,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("add2fofc", function(mes
   };
   var byteArray = new Uint8Array(byteNumbers);
   var blob = new Blob([byteArray], {type: 'application/octet-binary'});
+  console.log("Uploading 2fofc Map")
     stage.loadFile( blob, { ext: message[4] } ).then(function (comp) {
       window.twofofc = comp.addRepresentation("surface", { color: message[2], 
                                                   isolevel: parseFloat(message[1]), 
@@ -195,6 +197,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addfofc_positive", func
   };
   var byteArray = new Uint8Array(byteNumbers);
   var blob = new Blob([byteArray], {type: 'application/octet-binary'});
+  console.log("Uploading fofc positive")
     stage.loadFile( blob, { ext: message[4] } ).then(function (comp) {
       window.fofcpos = comp.addRepresentation("surface", { color: message[2], 
                                                   isolevel: parseFloat(message[1]), 
@@ -212,6 +215,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addfofc_negative", func
   };
   var byteArray = new Uint8Array(byteNumbers);
   var blob = new Blob([byteArray], {type: 'application/octet-binary'});
+  console.log("Uploading fofc neg")
     stage.loadFile( blob, { ext: message[4] } ).then(function (comp) {
       window.fofcneg = comp.addRepresentation("surface", { color: message[2], 
                                                   isolevel: parseFloat(message[1]), 
@@ -221,29 +225,33 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addfofc_negative", func
 }); 
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("updateAssembly", function(message){
-  window.struc.setParameters({assembly:message[0],
-                            });
+  console.log("Update Assembly to" + message[0])
+  window.struc.setParameters({assembly:message[0]});
 })
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("twiddleEvent", function(message){
+  console.log("Updating Event Map")
   window.event.setParameters({isolevel:parseFloat(message[0]),
                             boxSize:parseFloat(message[1])
                             });
 })
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("twiddle2fofc", function(message){
+  console.log("Updating 2fofc Map")
   window.twofofc.setParameters({isolevel:parseFloat(message[0]),
                             boxSize:parseFloat(message[1])
                             });
 })
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("twiddlefofc_positive", function(message){
+  console.log("Updating Positive Fofc Map")
   window.fofcpos.setParameters({isolevel:parseFloat(message[0]),
                             boxSize:parseFloat(message[1])
                             });
 })
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("twiddlefofc_negative", function(message){
+  console.log("Updating Negative Fofc Map")
   window.fofcneg.setParameters({isolevel:parseFloat(message[0]),
                             boxSize:parseFloat(message[1])
                             });
@@ -251,6 +259,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("twiddlefofc_negative", 
 
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("updateVisabilities", function(message){
+  console.log("Updating visability of Map")
   window.event.setVisibility((message[0] === 'true'))
   window.twofofc.setVisibility((message[1] === 'true'))
   window.fofcpos.setVisibility((message[2] === 'true'))
