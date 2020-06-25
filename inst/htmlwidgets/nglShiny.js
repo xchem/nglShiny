@@ -170,7 +170,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addEvent", function(mes
                                                   smooth: 40, 
                                                   useWorker: true, 
                                                   contour:true, 
-                                                  wrap:true}).setVisibility(false);
+                                                  wrap:true}).setVisibility(message[6] === 'true');
     });
 });
 
@@ -192,7 +192,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("add2fofc", function(mes
                                                   smooth: 40, 
                                                   useWorker: true, 
                                                   contour:true, 
-                                                  wrap:true}).setVisibility(false);
+                                                  wrap:true}).setVisibility(message[6] === 'true');
     });
 });
 
@@ -214,7 +214,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addfofc_positive", func
                                                   smooth: 40, 
                                                   useWorker: true, 
                                                   contour:true, 
-                                                  wrap:true}).setVisibility(false);
+                                                  wrap:true}).setVisibility(message[6] === 'true');
     });
 }); 
 
@@ -236,7 +236,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addfofc_negative", func
                                                   smooth: 40,
                                                   useWorker: true, 
                                                   contour:true, 
-                                                  wrap:true}).setVisibility(false);
+                                                  wrap:true}).setVisibility(message[6] === 'true');
     });
 }); 
 
