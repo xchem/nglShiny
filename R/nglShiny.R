@@ -26,14 +26,10 @@
 #'
 #' @return a reference to an htmlwidget.
 #'
-nglShiny <- function(options, width = NULL, height = NULL, elementId = NULL)
+nglShiny <- function(name, options, width = NULL, height = NULL, elementId = NULL)
 {
-  printf("--- ~/github/nglShiny/R/nglShiny ctor");
-
-  stopifnot("pdbID" %in% names(options))
-
   htmlwidgets::createWidget(
-    name = 'nglShiny',
+    name = name,
     options,
     width = width,
     height = height,

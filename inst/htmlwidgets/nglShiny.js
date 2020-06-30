@@ -1,7 +1,7 @@
 // shameful use of primitive global variables for now 
 window.pdbID = "1crn";
 window.event = "event";
-window.representation = "ball+sitck";
+window.representation = "ball+stick";
 window.colorScheme = "residueIndex";
 //------------------------------------------------------------------------------------------------------------------------
 HTMLWidgets.widget({
@@ -36,6 +36,7 @@ HTMLWidgets.widget({
     } // return
   } // factory
 });  // widget
+
 //------------------------------------------------------------------------------------------------------------------------
 function setComponentNames(x, namedComponents)
 {
@@ -152,6 +153,37 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB2", function(mess
     });
 });
 
+if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setapoPDB", function(message){
+    stage.removeAllComponents();
+    // Assumption, message is R list of n objects
+    var pdb = message[0];
+    window.pdbID = pdb;
+    var stringBlob = new Blob( [ pdb ], { type: 'text/plain'} );
+    console.log("Uploading PDB")
+    //stage.setParameters({'clipNear':parseFloat(message[2]), 'clipFar':parseFloat(message[3]), 'clipDist':parseFloat(message[1]), 'fogNear':parseFloat(message[4]), 'fogFar':parseFloat(message[5])});  
+    stage.loadFile(stringBlob, { ext: "pdb" }).then(function (comp) {
+      window.struc = comp.addRepresentation("cartoon"); 
+      comp.autoView();  
+    });
+});
+
+if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addMol", function(message){
+    // Assumption, message is R list of n objects
+    var mol = message[0];
+    //window.pdbID = pdb;
+    var stringBlob = new Blob( [ mol ], { type: 'text/plain'} );
+    console.log("Uploading .Mol")
+    //stage.setParameters({'clipNear':parseFloat(message[2]), 'clipFar':parseFloat(message[3]), 'clipDist':parseFloat(message[1]), 'fogNear':parseFloat(message[4]), 'fogFar':parseFloat(message[5])});  
+    stage.loadFile(stringBlob, { ext: "mol" }).then(function (comp) {
+      window.struc = comp.addRepresentation("licorice", {multipleBond: "symmetric"}); 
+      //comp.autoView();  
+    });
+});
+
+
+
+
+
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addEvent", function(message){
   var isTrueSet = (message[3] === 'true');
   var byteCharacters = atob(message[0]);
@@ -166,7 +198,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addEvent", function(mes
       window.event = comp.addRepresentation("surface", { color: message[2], 
                                                   isolevel: parseFloat(message[1]), 
                                                   negateIsolevel: isTrueSet,
-                                                  boxSize:parseFloat(message[5]), useWorker: true, contour:true, wrap:true}).setVisibility(false);
+                                                  boxSize:parseFloat(message[5]), useWorker: false, contour:true, wrap:true}).setVisibility(false);
     });
 });
 
@@ -184,7 +216,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("add2fofc", function(mes
       window.twofofc = comp.addRepresentation("surface", { color: message[2], 
                                                   isolevel: parseFloat(message[1]), 
                                                   negateIsolevel: isTrueSet,
-                                                  boxSize:parseFloat(message[5]), useWorker: true, contour:true, wrap:true}).setVisibility(false);
+                                                  boxSize:parseFloat(message[5]), useWorker: false, contour:true, wrap:true}).setVisibility(false);
     });
 });
 
@@ -202,7 +234,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addfofc_positive", func
       window.fofcpos = comp.addRepresentation("surface", { color: message[2], 
                                                   isolevel: parseFloat(message[1]), 
                                                   negateIsolevel: false,
-                                                  boxSize:parseFloat(message[5]), useWorker: true, contour:true, wrap:true}).setVisibility(false);
+                                                  boxSize:parseFloat(message[5]), useWorker: false, contour:true, wrap:true}).setVisibility(false);
     });
 }); 
 
@@ -220,7 +252,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addfofc_negative", func
       window.fofcneg = comp.addRepresentation("surface", { color: message[2], 
                                                   isolevel: parseFloat(message[1]), 
                                                   negateIsolevel: true,
-                                                  boxSize:parseFloat(message[5]), useWorker: true, contour:true, wrap:true}).setVisibility(false);
+                                                  boxSize:parseFloat(message[5]), useWorker: false, contour:true, wrap:true}).setVisibility(false);
     });
 }); 
 
