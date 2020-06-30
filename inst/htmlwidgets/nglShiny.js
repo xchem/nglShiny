@@ -198,7 +198,15 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addEvent", function(mes
       window.event = comp.addRepresentation("surface", { color: message[2], 
                                                   isolevel: parseFloat(message[1]), 
                                                   negateIsolevel: isTrueSet,
+<<<<<<< HEAD
                                                   boxSize:parseFloat(message[5]), useWorker: false, contour:true, wrap:true}).setVisibility(false);
+=======
+                                                  boxSize:parseFloat(message[5]),
+                                                  smooth: 40, 
+                                                  useWorker: true, 
+                                                  contour:true, 
+                                                  wrap:true}).setVisibility(message[6] === 'true');
+>>>>>>> b883fbb7b8cbd9d36bd62c968e1bf4d614d3ffb5
     });
 });
 
@@ -216,7 +224,15 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("add2fofc", function(mes
       window.twofofc = comp.addRepresentation("surface", { color: message[2], 
                                                   isolevel: parseFloat(message[1]), 
                                                   negateIsolevel: isTrueSet,
+<<<<<<< HEAD
                                                   boxSize:parseFloat(message[5]), useWorker: false, contour:true, wrap:true}).setVisibility(false);
+=======
+                                                  boxSize:parseFloat(message[5]),
+                                                  smooth: 40, 
+                                                  useWorker: true, 
+                                                  contour:true, 
+                                                  wrap:true}).setVisibility(message[6] === 'true');
+>>>>>>> b883fbb7b8cbd9d36bd62c968e1bf4d614d3ffb5
     });
 });
 
@@ -234,7 +250,15 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addfofc_positive", func
       window.fofcpos = comp.addRepresentation("surface", { color: message[2], 
                                                   isolevel: parseFloat(message[1]), 
                                                   negateIsolevel: false,
+<<<<<<< HEAD
                                                   boxSize:parseFloat(message[5]), useWorker: false, contour:true, wrap:true}).setVisibility(false);
+=======
+                                                  boxSize:parseFloat(message[5]),
+                                                  smooth: 40, 
+                                                  useWorker: true, 
+                                                  contour:true, 
+                                                  wrap:true}).setVisibility(message[6] === 'true');
+>>>>>>> b883fbb7b8cbd9d36bd62c968e1bf4d614d3ffb5
     });
 }); 
 
@@ -252,7 +276,15 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addfofc_negative", func
       window.fofcneg = comp.addRepresentation("surface", { color: message[2], 
                                                   isolevel: parseFloat(message[1]), 
                                                   negateIsolevel: true,
+<<<<<<< HEAD
                                                   boxSize:parseFloat(message[5]), useWorker: false, contour:true, wrap:true}).setVisibility(false);
+=======
+                                                  boxSize:parseFloat(message[5]), 
+                                                  smooth: 40,
+                                                  useWorker: true, 
+                                                  contour:true, 
+                                                  wrap:true}).setVisibility(message[6] === 'true');
+>>>>>>> b883fbb7b8cbd9d36bd62c968e1bf4d614d3ffb5
     });
 }); 
 
