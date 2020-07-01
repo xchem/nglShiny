@@ -64,25 +64,25 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("fit", function(message)
 
     console.log("nglShiny fit");
     stage.autoView();
-    });
+});
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("ligfit", function(message){
     var stringBlob = new Blob( [ window.pdbID ], { type: 'text/plain'} );
     stage.loadFile(stringBlob, { ext: "pdb" }).then(function (comp) {
       comp.autoView("LIG");    
     });
-  })
+})
 
 //------------------------------------------------------------------------------------------------------------------------
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("removeAllRepresentations", function(message){
 
     stage.getComponentsByName(window.pdbID).list[0].removeAllRepresentations()
     stage.getComponentsByName(window.pdbID).list[1].removeAllRepresentations()
-    })
+})
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("removeAllComponents", function(message){
     stage.removeAllComponents()
-    })
+})
 
 //------------------------------------------------------------------------------------------------------------------------
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setRepresentation", function(message){
@@ -91,7 +91,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setRepresentation", fun
     var rep = message;
     window.representation = rep;
     stage.getComponentsByName(window.pdbID).addRepresentation(rep)
-    })
+})
 
 //-------------------- 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("updateParams", function(message){
@@ -119,7 +119,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setColorScheme", functi
     console.log("new scheme: " + newScheme);
     // debugger;
     stage.getComponentsByName(window.pdbID).addRepresentation(window.representation, {colorScheme: newScheme})
-    })
+})
 
 //------------------------------------------------------------------------------------------------------------------------
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB", function(message){
@@ -175,13 +175,28 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addMol", function(messa
     console.log("Uploading .Mol")
     //stage.setParameters({'clipNear':parseFloat(message[2]), 'clipFar':parseFloat(message[3]), 'clipDist':parseFloat(message[1]), 'fogNear':parseFloat(message[4]), 'fogFar':parseFloat(message[5])});  
     stage.loadFile(stringBlob, { ext: "mol" }).then(function (comp) {
-      window.struc = comp.addRepresentation("licorice", {multipleBond: "symmetric"}); 
+      comp.addRepresentation("licorice", {multipleBond: "symmetric", opacity:0.25}); 
       //comp.autoView();  
     });
 });
 
-
-
+if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addMolandfocus", function(message){
+    try {
+      window.mol.setVisibility(false)
+    }
+    finally {
+    // Assumption, message is R list of n objects
+    var mol = message[0];
+    //window.pdbID = pdb;
+    var stringBlob = new Blob( [ mol ], { type: 'text/plain'} );
+    console.log("Uploading .Mol")
+    //stage.setParameters({'clipNear':parseFloat(message[2]), 'clipFar':parseFloat(message[3]), 'clipDist':parseFloat(message[1]), 'fogNear':parseFloat(message[4]), 'fogFar':parseFloat(message[5])});  
+    stage.loadFile(stringBlob, { ext: "mol" }).then(function (comp) {
+      window.mol = comp.addRepresentation("licorice", {colorValue: 'limegreen', multipleBond: "symmetric"}); 
+      comp.autoView();  
+    });
+  }
+});
 
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addEvent", function(message){
@@ -198,15 +213,11 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addEvent", function(mes
       window.event = comp.addRepresentation("surface", { color: message[2], 
                                                   isolevel: parseFloat(message[1]), 
                                                   negateIsolevel: isTrueSet,
-<<<<<<< HEAD
-                                                  boxSize:parseFloat(message[5]), useWorker: false, contour:true, wrap:true}).setVisibility(false);
-=======
                                                   boxSize:parseFloat(message[5]),
                                                   smooth: 40, 
                                                   useWorker: true, 
                                                   contour:true, 
                                                   wrap:true}).setVisibility(message[6] === 'true');
->>>>>>> b883fbb7b8cbd9d36bd62c968e1bf4d614d3ffb5
     });
 });
 
@@ -224,15 +235,11 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("add2fofc", function(mes
       window.twofofc = comp.addRepresentation("surface", { color: message[2], 
                                                   isolevel: parseFloat(message[1]), 
                                                   negateIsolevel: isTrueSet,
-<<<<<<< HEAD
-                                                  boxSize:parseFloat(message[5]), useWorker: false, contour:true, wrap:true}).setVisibility(false);
-=======
                                                   boxSize:parseFloat(message[5]),
                                                   smooth: 40, 
                                                   useWorker: true, 
                                                   contour:true, 
                                                   wrap:true}).setVisibility(message[6] === 'true');
->>>>>>> b883fbb7b8cbd9d36bd62c968e1bf4d614d3ffb5
     });
 });
 
@@ -250,15 +257,11 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addfofc_positive", func
       window.fofcpos = comp.addRepresentation("surface", { color: message[2], 
                                                   isolevel: parseFloat(message[1]), 
                                                   negateIsolevel: false,
-<<<<<<< HEAD
-                                                  boxSize:parseFloat(message[5]), useWorker: false, contour:true, wrap:true}).setVisibility(false);
-=======
                                                   boxSize:parseFloat(message[5]),
                                                   smooth: 40, 
                                                   useWorker: true, 
                                                   contour:true, 
                                                   wrap:true}).setVisibility(message[6] === 'true');
->>>>>>> b883fbb7b8cbd9d36bd62c968e1bf4d614d3ffb5
     });
 }); 
 
@@ -276,15 +279,11 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addfofc_negative", func
       window.fofcneg = comp.addRepresentation("surface", { color: message[2], 
                                                   isolevel: parseFloat(message[1]), 
                                                   negateIsolevel: true,
-<<<<<<< HEAD
-                                                  boxSize:parseFloat(message[5]), useWorker: false, contour:true, wrap:true}).setVisibility(false);
-=======
                                                   boxSize:parseFloat(message[5]), 
                                                   smooth: 40,
                                                   useWorker: true, 
                                                   contour:true, 
                                                   wrap:true}).setVisibility(message[6] === 'true');
->>>>>>> b883fbb7b8cbd9d36bd62c968e1bf4d614d3ffb5
     });
 }); 
 
