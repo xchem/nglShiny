@@ -193,7 +193,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addMolandfocus", functi
     //stage.setParameters({'clipNear':parseFloat(message[2]), 'clipFar':parseFloat(message[3]), 'clipDist':parseFloat(message[1]), 'fogNear':parseFloat(message[4]), 'fogFar':parseFloat(message[5])});  
     stage.loadFile(stringBlob, { ext: "mol" }).then(function (comp) {
       window.mol = comp.addRepresentation("licorice", {colorValue: 'limegreen', multipleBond: "symmetric"}); 
-      comp.autoView();  
+      //comp.autoView();  
     });
   }
 });
