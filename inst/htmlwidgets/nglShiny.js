@@ -36,33 +36,6 @@ HTMLWidgets.widget({
   } // factory
 });  // widget
 
-if(HTMLWidgets.shinyMode) {
-stage.setParameters({
-    cameraType: "orthographic",
-    mousePreset: "coot"
-})
-}
-
-if(HTMLWidgets.shinyMode) {
-var clicked = []
-stage.signals.clicked.add(function (pickingProxy) {
-  if (pickingProxy && (pickingProxy.atom || pickingProxy.bond )){
-    var atom = pickingProxy.atom || pickingProxy.closestBondAtom;
-    var name = atom.qualifiedName()
-    // Check if clicked atom is in array
-    if (clicked.includes(name)) {
-      for(var i = 0; i < clicked.length; i++){
-        if (clicked[i] === name){ clicked.splice(i,1); }
-      }
-    } else { 
-      clicked.push(name)
-    }
-    Shiny.onInputChange('clickedAtoms', clicked)
-    console.log(clicked)
-  }
-});
-}
-
 //------------------------------------------------------------------------------------------------------------------------
 function setComponentNames(x, namedComponents)
 {
@@ -163,7 +136,31 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB", function(messa
 
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB2", function(message){
-    var clicked = []
+
+    // This is probably wrong, find a better place to put this
+    stage.setParameters({
+      cameraType: "orthographic",
+      mousePreset: "coot"
+    })
+    var window.clicked = []
+    stage.signals.clicked.add(function (pickingProxy) {
+    if (pickingProxy && (pickingProxy.atom || pickingProxy.bond )){
+      var atom = pickingProxy.atom || pickingProxy.closestBondAtom;
+      var name = atom.qualifiedName()
+      // Check if clicked atom is in array
+      if (window.clicked.includes(name)) {
+      for(var i = 0; i < window.clicked.length; i++){
+        if (window.clicked[i] === name){ window.clicked.splice(i,1); }
+      }
+      } else { 
+      window.clicked.push(name)
+      } 
+      Shiny.onInputChange('clickedAtoms', window.clicked)
+      console.log(window.clicked)
+    }
+    });
+    // Consider moving...
+    
     stage.removeAllComponents();
     // Assumption, message is R list of n objects
     var pdb = message[0];
