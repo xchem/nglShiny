@@ -142,25 +142,6 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler('setup', function(messag
   })
   var newClick = []
   window.clicked = newClick
-
-  stage.signals.clicked.add(function (pickingProxy) {
-  var clicked = window.clicked
-  if (pickingProxy && (pickingProxy.atom || pickingProxy.bond )){
-      var atom = pickingProxy.atom || pickingProxy.closestBondAtom;
-      var name = atom.qualifiedName();
-      // Check if clicked atom is in array
-      if (clicked.includes(name)) {
-        for(var i = 0; i < clicked.length; i++){
-          if (clicked[i] === name){clicked.splice(i,1); }
-        }
-      } else { 
-        clicked.push(name);
-      } 
-      console.log(clicked);
-      Shiny.onInputChange('clickedAtoms', clicked);
-  }
-  window.clicked = clicked
-});
 })
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB2", function(message){
