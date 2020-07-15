@@ -17,6 +17,25 @@ HTMLWidgets.widget({
           console.log(options)
           var stage;
           stage = new NGL.Stage(el);
+
+          stage.signals.clicked.add(function (pickingProxy) {
+            var clicked = window.clicked
+            if (pickingProxy && (pickingProxy.atom || pickingProxy.bond )){
+              var atom = pickingProxy.atom || pickingProxy.closestBondAtom;
+              var name = atom.qualifiedName();
+              // Check if clicked atom is in array
+              if (clicked.includes(name)) {
+                for(var i = 0; i < clicked.length; i++){
+                  if (clicked[i] === name){clicked.splice(i,1); }
+                }
+              } else { 
+                clicked.push(name);
+              } 
+              console.log(clicked);
+              Shiny.onInputChange('clickedAtoms', clicked);
+            }
+            window.clicked = clicked
+          });
           window.stage = stage;
           //uri = "rcsb://" + options.pdbID;
           uri = options.pdbID;
