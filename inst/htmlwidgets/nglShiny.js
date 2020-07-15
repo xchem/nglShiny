@@ -144,7 +144,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler('setup', function(messag
   window.clicked = newClick
 })
 
-stage.signals.clicked.add(function (pickingProxy) {
+if(HTMLWidgets.shinyMode) stage.signals.clicked.add(function (pickingProxy) {
   var clicked = window.clicked
   if (pickingProxy && (pickingProxy.atom || pickingProxy.bond )){
       var atom = pickingProxy.atom || pickingProxy.closestBondAtom;
