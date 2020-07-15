@@ -134,40 +134,33 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB", function(messa
     stage.autoView()
     })
 
-
-if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB2", function(message){
-
-    // This is probably wrong, find a better place to put this
-    stage.setParameters({
-      cameraType: "orthographic",
-      mousePreset: "coot"
-    })
-    window.clicked = []
-    stage.signals.clicked.add(function (pickingProxy) {
-    if (pickingProxy && (pickingProxy.atom || pickingProxy.bond )){
-      var atom = pickingProxy.atom || pickingProxy.closestBondAtom;
-      var name = atom.qualifiedName()
-      // Check if clicked atom is in array
-      if (window.clicked.includes(name)) {
+window.clicked = []
+stage.signals.clicked.add(function (pickingProxy) {
+  if (pickingProxy && (pickingProxy.atom || pickingProxy.bond )){
+    var atom = pickingProxy.atom || pickingProxy.closestBondAtom;
+    var name = atom.qualifiedName()
+    // Check if clicked atom is in array
+    if (window.clicked.includes(name)) {
       for(var i = 0; i < window.clicked.length; i++){
         if (window.clicked[i] === name){ window.clicked.splice(i,1); }
       }
-      } else { 
+    } else { 
       window.clicked.push(name)
-      } 
-      Shiny.onInputChange('clickedAtoms', window.clicked)
-      console.log(window.clicked)
-    }
-    });
-    // Consider moving...
+    } 
+    Shiny.onInputChange('clickedAtoms', window.clicked)
+    console.log(window.clicked)
+  }
+});
 
+
+if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB2", function(message){
     stage.removeAllComponents();
     // Assumption, message is R list of n objects
     var pdb = message[0];
     window.pdbID = pdb;
     var stringBlob = new Blob( [ pdb ], { type: 'text/plain'} );
     console.log("Uploading PDB")
-    stage.setParameters({'clipNear':parseFloat(message[2]), 'clipFar':parseFloat(message[3]), 'clipDist':parseFloat(message[1]), 'fogNear':parseFloat(message[4]), 'fogFar':parseFloat(message[5])});  
+    stage.setParameters({cameraType: "orthographic", mousePreset: "coot", 'clipNear':parseFloat(message[2]), 'clipFar':parseFloat(message[3]), 'clipDist':parseFloat(message[1]), 'fogNear':parseFloat(message[4]), 'fogFar':parseFloat(message[5])});  
     stage.loadFile(stringBlob, { ext: "pdb" }).then(function (comp) {
       window.struc = comp.addRepresentation("ball+stick"); 
       window.ligand = comp.addRepresentation("ball+stick", {sele: "LIG", colorValue: "limegreen", multipleBond: "symmetric"}); 
