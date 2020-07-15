@@ -142,7 +142,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB2", function(mess
       cameraType: "orthographic",
       mousePreset: "coot"
     })
-    var window.clicked = []
+    window.clicked = []
     stage.signals.clicked.add(function (pickingProxy) {
     if (pickingProxy && (pickingProxy.atom || pickingProxy.bond )){
       var atom = pickingProxy.atom || pickingProxy.closestBondAtom;
@@ -160,7 +160,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB2", function(mess
     }
     });
     // Consider moving...
-    
+
     stage.removeAllComponents();
     // Assumption, message is R list of n objects
     var pdb = message[0];
