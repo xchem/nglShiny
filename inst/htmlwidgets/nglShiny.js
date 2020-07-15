@@ -142,9 +142,8 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler('setup', function(messag
   })
   var newClick = []
   window.clicked = newClick
-})
 
-if(HTMLWidgets.shinyMode) stage.signals.clicked.add(function (pickingProxy) {
+  stage.signals.clicked.add(function (pickingProxy) {
   var clicked = window.clicked
   if (pickingProxy && (pickingProxy.atom || pickingProxy.bond )){
       var atom = pickingProxy.atom || pickingProxy.closestBondAtom;
@@ -162,7 +161,7 @@ if(HTMLWidgets.shinyMode) stage.signals.clicked.add(function (pickingProxy) {
   }
   window.clicked = clicked
 });
-
+})
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB2", function(message){
     stage.removeAllComponents();
