@@ -134,24 +134,31 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB", function(messa
     stage.autoView()
     })
 
-window.clicked = []
-stage.signals.clicked.add(function (pickingProxy) {
-  if (pickingProxy && (pickingProxy.atom || pickingProxy.bond )){
-    var atom = pickingProxy.atom || pickingProxy.closestBondAtom;
-    var name = atom.qualifiedName()
-    // Check if clicked atom is in array
-    if (window.clicked.includes(name)) {
-      for(var i = 0; i < window.clicked.length; i++){
-        if (window.clicked[i] === name){ window.clicked.splice(i,1); }
-      }
-    } else { 
-      window.clicked.push(name)
-    } 
-    Shiny.onInputChange('clickedAtoms', window.clicked)
-    console.log(window.clicked)
-  }
-});
 
+if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler('setup', function(message){
+  stage.setParameters({
+    cameraType: "orthographic",
+    mousePreset: "coot"
+  })
+
+  window.clicked = []
+  stage.signals.clicked.add(function (pickingProxy) {
+    if (pickingProxy && (pickingProxy.atom || pickingProxy.bond )){
+      var atom = pickingProxy.atom || pickingProxy.closestBondAtom;
+      var name = atom.qualifiedName()
+      // Check if clicked atom is in array
+      if (window.clicked.includes(name)) {
+        for(var i = 0; i < window.clicked.length; i++){
+          if (window.clicked[i] === name){ window.clicked.splice(i,1); }
+        }
+      } else { 
+        window.clicked.push(name)
+      } 
+      Shiny.onInputChange('clickedAtoms', window.clicked)
+      console.log(window.clicked)
+    }
+  });
+}
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB2", function(message){
     stage.removeAllComponents();
@@ -160,7 +167,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB2", function(mess
     window.pdbID = pdb;
     var stringBlob = new Blob( [ pdb ], { type: 'text/plain'} );
     console.log("Uploading PDB")
-    stage.setParameters({cameraType: "orthographic", mousePreset: "coot", 'clipNear':parseFloat(message[2]), 'clipFar':parseFloat(message[3]), 'clipDist':parseFloat(message[1]), 'fogNear':parseFloat(message[4]), 'fogFar':parseFloat(message[5])});  
+    stage.setParameters({'clipNear':parseFloat(message[2]), 'clipFar':parseFloat(message[3]), 'clipDist':parseFloat(message[1]), 'fogNear':parseFloat(message[4]), 'fogFar':parseFloat(message[5])});  
     stage.loadFile(stringBlob, { ext: "pdb" }).then(function (comp) {
       window.struc = comp.addRepresentation("ball+stick"); 
       window.ligand = comp.addRepresentation("ball+stick", {sele: "LIG", colorValue: "limegreen", multipleBond: "symmetric"}); 
