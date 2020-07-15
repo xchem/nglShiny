@@ -18,23 +18,46 @@ HTMLWidgets.widget({
           var stage;
           stage = new NGL.Stage(el);
 
+          stage.signals.clicked.removeAll();
           stage.signals.clicked.add(function (pickingProxy) {
-            var clicked = window.clicked
+            const clicked = window.clicked; // atom indicies
+            const clickedNames = window.clickedNames // qualified Names
             if (pickingProxy && (pickingProxy.atom || pickingProxy.bond )){
-              var atom = pickingProxy.atom || pickingProxy.closestBondAtom;
-              var name = atom.qualifiedName();
+              const atom = pickingProxy.atom || pickingProxy.closestBondAtom;
+              const fullname = atom.qualifiedName();
+              const name = atom.index
               // Check if clicked atom is in array
-              if (clicked.includes(name)) {
-                for(var i = 0; i < clicked.length; i++){
+              if (clickedNames.includes(fullname)) {
+                for(var i = 0; i < clickedNames.length; i++){
+                  if (clickedNames[i] === fullname){clickedNames.splice(i,1); }
                   if (clicked[i] === name){clicked.splice(i,1); }
                 }
-              } else { 
+              } else {
                 clicked.push(name);
-              } 
+                clickedNames.push(fullname);
+              }
               console.log(clicked);
-              Shiny.onInputChange('clickedAtoms', clicked);
+              console.log(clickedNames);
+
+              // behaviour:
+              // Clear existing representations
+              if (window.clickedRepresentation !== undefined) pickingProxy.component.removeRepresentation(window.clickedRepresentation);
+              
+              // Remake representation
+              var seleName = []
+              for (var i = 0; i < clicked.length; i++){
+                seleName[i] = clicked[i]
+              }
+              window.clickedRepresentation = pickingProxy.component.addRepresentation("ball+stick", { sele: '@'.concat(seleName.toString()),
+                                                                                                      aspectRatio: 6, 
+                                                                                                      opacity: 0.5,
+                                                                                                      colorValue: 'white'
+                                                                                                    })
+              // Output to back-end
+              Shiny.onInputChange('clickedAtoms', clickedNames);
             }
-            window.clicked = clicked
+            window.clicked = clicked;
+            window.clickedNames = clickedNames
           });
           window.stage = stage;
           //uri = "rcsb://" + options.pdbID;
@@ -161,6 +184,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler('setup', function(messag
   })
   var newClick = []
   window.clicked = newClick
+  window.clickedNames = newClick
 })
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB2", function(message){
