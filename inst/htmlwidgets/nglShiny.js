@@ -18,10 +18,6 @@ HTMLWidgets.widget({
           var stage;
           stage = new NGL.Stage(el);
           window.stage = stage;
-          stage.setParameters({
-            cameraType: "orthographic",
-            mousePreset: "coot"
-          })
           //uri = "rcsb://" + options.pdbID;
           uri = options.pdbID;
           window.pdbID = options.pdbID;
@@ -40,6 +36,15 @@ HTMLWidgets.widget({
   } // factory
 });  // widget
 
+if(HTMLWidgets.shinyMode) {
+stage.setParameters({
+    cameraType: "orthographic",
+    mousePreset: "coot"
+})
+}
+
+if(HTMLWidgets.shinyMode) {
+var clicked = []
 stage.signals.clicked.add(function (pickingProxy) {
   if (pickingProxy && (pickingProxy.atom || pickingProxy.bond )){
     var atom = pickingProxy.atom || pickingProxy.closestBondAtom;
@@ -56,6 +61,7 @@ stage.signals.clicked.add(function (pickingProxy) {
     console.log(clicked)
   }
 });
+}
 
 //------------------------------------------------------------------------------------------------------------------------
 function setComponentNames(x, namedComponents)
