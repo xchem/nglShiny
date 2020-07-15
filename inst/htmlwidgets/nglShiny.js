@@ -18,7 +18,10 @@ HTMLWidgets.widget({
           var stage;
           stage = new NGL.Stage(el);
           window.stage = stage;
-
+          stage.setParameters({
+            cameraType: "orthographic",
+            mousePreset: "coot"
+          })
           //uri = "rcsb://" + options.pdbID;
           uri = options.pdbID;
           window.pdbID = options.pdbID;
@@ -36,6 +39,23 @@ HTMLWidgets.widget({
     } // return
   } // factory
 });  // widget
+
+stage.signals.clicked.add(function (pickingProxy) {
+  if (pickingProxy && (pickingProxy.atom || pickingProxy.bond )){
+    var atom = pickingProxy.atom || pickingProxy.closestBondAtom;
+    var name = atom.qualifiedName()
+    // Check if clicked atom is in array
+    if (clicked.includes(name)) {
+      for(var i = 0; i < clicked.length; i++){
+        if (clicked[i] === name){ clicked.splice(i,1); }
+      }
+    } else { 
+      clicked.push(name)
+    }
+    Shiny.onInputChange('clickedAtoms', clicked)
+    console.log(clicked)
+  }
+});
 
 //------------------------------------------------------------------------------------------------------------------------
 function setComponentNames(x, namedComponents)
@@ -61,7 +81,6 @@ function setComponentNames(x, namedComponents)
 } // setComponentNames
 //------------------------------------------------------------------------------------------------------------------------
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("fit", function(message){
-
     console.log("nglShiny fit");
     stage.autoView();
 });
@@ -138,6 +157,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB", function(messa
 
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB2", function(message){
+    var clicked = []
     stage.removeAllComponents();
     // Assumption, message is R list of n objects
     var pdb = message[0];
