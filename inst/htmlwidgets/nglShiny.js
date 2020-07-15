@@ -140,25 +140,29 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler('setup', function(messag
     cameraType: "orthographic",
     mousePreset: "coot"
   })
+  var newClick = []
+  window.clicked = newClick
+})
 
-  window.clicked = []
-  stage.signals.clicked.add(function (pickingProxy) {
-    if (pickingProxy && (pickingProxy.atom || pickingProxy.bond )){
+stage.signals.clicked.add(function (pickingProxy) {
+  var clicked = window.clicked
+  if (pickingProxy && (pickingProxy.atom || pickingProxy.bond )){
       var atom = pickingProxy.atom || pickingProxy.closestBondAtom;
-      var name = atom.qualifiedName()
+      var name = atom.qualifiedName();
       // Check if clicked atom is in array
-      if (window.clicked.includes(name)) {
-        for(var i = 0; i < window.clicked.length; i++){
-          if (window.clicked[i] === name){ window.clicked.splice(i,1); }
+      if (clicked.includes(name)) {
+        for(var i = 0; i < clicked.length; i++){
+          if (clicked[i] === name){clicked.splice(i,1); }
         }
       } else { 
-        window.clicked.push(name)
+        clicked.push(name);
       } 
-      Shiny.onInputChange('clickedAtoms', window.clicked)
-      console.log(window.clicked)
-    }
-  });
-})
+      console.log(clicked);
+      Shiny.onInputChange('clickedAtoms', clicked);
+  }
+  window.clicked = clicked
+});
+
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB2", function(message){
     stage.removeAllComponents();
