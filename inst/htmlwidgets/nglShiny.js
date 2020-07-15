@@ -158,7 +158,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler('setup', function(messag
       console.log(window.clicked)
     }
   });
-}
+})
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB2", function(message){
     stage.removeAllComponents();
