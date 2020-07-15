@@ -20,24 +20,20 @@ HTMLWidgets.widget({
 
           stage.signals.clicked.removeAll();
           stage.signals.clicked.add(function (pickingProxy) {
-            const clicked = window.clicked; // atom indicies
-            const clickedNames = window.clickedNames // qualified Names
+            const clicked = window.clicked;
             if (pickingProxy && (pickingProxy.atom || pickingProxy.bond )){
               const atom = pickingProxy.atom || pickingProxy.closestBondAtom;
-              const fullname = atom.qualifiedName();
+              //const name = atom.qualifiedName();
               const name = atom.index
               // Check if clicked atom is in array
-              if (clickedNames.includes(fullname)) {
-                for(var i = 0; i < clickedNames.length; i++){
-                  if (clickedNames[i] === fullname){clickedNames.splice(i,1); }
+              if (clicked.includes(name)) {
+                for(var i = 0; i < clicked.length; i++){
                   if (clicked[i] === name){clicked.splice(i,1); }
                 }
               } else {
                 clicked.push(name);
-                clickedNames.push(fullname);
               }
               console.log(clicked);
-              console.log(clickedNames);
 
               // behaviour:
               // Clear existing representations
@@ -48,16 +44,11 @@ HTMLWidgets.widget({
               for (var i = 0; i < clicked.length; i++){
                 seleName[i] = clicked[i]
               }
-              window.clickedRepresentation = pickingProxy.component.addRepresentation("ball+stick", { sele: '@'.concat(seleName.toString()),
-                                                                                                      aspectRatio: 6, 
-                                                                                                      opacity: 0.5,
-                                                                                                      colorValue: 'white'
-                                                                                                    })
+              window.clickedRepresentation = pickingProxy.component.addRepresentation("ball+stick", { sele: '@'.concat(seleName.toString()) , aspectRatio: 6, opacity: 0.5})
               // Output to back-end
-              Shiny.onInputChange('clickedAtoms', clickedNames);
+              //Shiny.onInputChange('clickedAtoms', clicked);
             }
             window.clicked = clicked;
-            window.clickedNames = clickedNames
           });
           window.stage = stage;
           //uri = "rcsb://" + options.pdbID;
@@ -184,7 +175,6 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler('setup', function(messag
   })
   var newClick = []
   window.clicked = newClick
-  window.clickedNames = newClick
 })
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB2", function(message){
