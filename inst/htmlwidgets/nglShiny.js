@@ -21,11 +21,13 @@ HTMLWidgets.widget({
           stage.signals.clicked.removeAll();
           stage.signals.clicked.add(function (pickingProxy) {
             const clicked = window.clicked;
-            //const clickedNames = window.clickedNames
+            const clickedNames = window.clickedNames
             if (pickingProxy && (pickingProxy.atom || pickingProxy.bond )){
               const atom = pickingProxy.atom || pickingProxy.closestBondAtom;
-              //const name = atom.qualifiedName();
+
+              const fullname = atom.qualifiedName();
               const name = atom.index
+
               // Check if clicked atom is in array
               if (clicked.includes(name)) {
                 for(var i = 0; i < clicked.length; i++){
@@ -34,6 +36,19 @@ HTMLWidgets.widget({
               } else {
                 clicked.push(name);
               }
+              // Possible to put into the above loop, but this all needs fixing up anyway. 
+              // Although poor coding, and twice as computationally expensive, it's easier to understand at the moment.
+
+              if (clickedNames.includes(fullname)) {
+                for(var i = 0; i < clickedNames.length; i++){
+                  if (clickedNames[i] === fullname) {clickedNames.splice(i,1)}
+                }
+              } else {
+                clickedNames.push(fullname)
+              }
+
+
+              console.log(clickedNames)
               console.log(clicked);
 
               // behaviour:
@@ -46,8 +61,10 @@ HTMLWidgets.widget({
                 seleName[i] = clicked[i]
               }
               window.clickedRepresentation = pickingProxy.component.addRepresentation("ball+stick", { sele: '@'.concat(seleName.toString()) , aspectRatio: 6, opacity: 0.5})
+              
               // Output to back-end
               Shiny.onInputChange('clickedAtoms', clicked);
+              Shiny.onInputChange('clickedNames', clickedNames)
             }
             window.clicked = clicked;
           });
@@ -174,7 +191,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler('setup', function(messag
     cameraType: "orthographic"//, mousePreset: "coot"
   })
   window.clicked = []
-  //window.clickedNames = []
+  window.clickedNames = []
 })
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB2", function(message){
