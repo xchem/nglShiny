@@ -21,12 +21,12 @@ HTMLWidgets.widget({
           stage.signals.clicked.removeAll();
           stage.signals.clicked.add(function (pickingProxy) {
             const clicked = window.clicked;
-            const clickedNames = window.clickedNames
+            const clickNames = window.clickNames;
             if (pickingProxy && (pickingProxy.atom || pickingProxy.bond )){
               const atom = pickingProxy.atom || pickingProxy.closestBondAtom;
 
               const fullname = atom.qualifiedName();
-              const name = atom.index
+              const name = atom.index;
 
               // Check if clicked atom is in array
               if (clicked.includes(name)) {
@@ -39,16 +39,16 @@ HTMLWidgets.widget({
               // Possible to put into the above loop, but this all needs fixing up anyway. 
               // Although poor coding, and twice as computationally expensive, it's easier to understand at the moment.
 
-              if (clickedNames.includes(fullname)) {
-                for(var i = 0; i < clickedNames.length; i++){
-                  if (clickedNames[i] === fullname) {clickedNames.splice(i,1)}
+              if (clickNames.includes(fullname)) {
+                for(var i = 0; i < clickNames.length; i++){
+                  if (clickNames[i] === fullname) {clickNames.splice(i,1)}
                 }
               } else {
-                clickedNames.push(fullname)
+                clickNames.push(fullname);
               }
 
-              // ...
-              console.log(clickedNames)
+              
+              console.log(clickNames);
               console.log(clicked);
 
               // behaviour:
@@ -60,11 +60,11 @@ HTMLWidgets.widget({
               for (var i = 0; i < clicked.length; i++){
                 seleName[i] = clicked[i]
               }
-              window.clickedRepresentation = pickingProxy.component.addRepresentation("ball+stick", { sele: '@'.concat(seleName.toString()) , aspectRatio: 6, opacity: 0.5})
+              window.clickedRepresentation = pickingProxy.component.addRepresentation("ball+stick", { sele: '@'.concat(seleName.toString()) , aspectRatio: 6, opacity: 0.5});
               
               // Output to back-end
               Shiny.onInputChange('clickedAtoms', clicked);
-              Shiny.onInputChange('clickedNames', clickedNames)
+              Shiny.onInputChange('clickNames', clickNames);
             }
             window.clicked = clicked;
           });
@@ -190,8 +190,8 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler('setup', function(messag
   stage.setParameters({
     cameraType: "orthographic"//, mousePreset: "coot"
   })
-  window.clicked = []
-  window.clickedNames = []
+  window.clicked = [];
+  window.clickNames = [];
 })
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB2", function(message){
