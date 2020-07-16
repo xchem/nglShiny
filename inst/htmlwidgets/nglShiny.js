@@ -47,7 +47,7 @@ HTMLWidgets.widget({
                 clickedNames.push(fullname)
               }
 
-
+              // ...
               console.log(clickedNames)
               console.log(clicked);
 
