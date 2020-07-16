@@ -21,6 +21,7 @@ HTMLWidgets.widget({
           stage.signals.clicked.removeAll();
           stage.signals.clicked.add(function (pickingProxy) {
             const clicked = window.clicked;
+            //const clickedNames = window.clickedNames
             if (pickingProxy && (pickingProxy.atom || pickingProxy.bond )){
               const atom = pickingProxy.atom || pickingProxy.closestBondAtom;
               //const name = atom.qualifiedName();
@@ -46,7 +47,7 @@ HTMLWidgets.widget({
               }
               window.clickedRepresentation = pickingProxy.component.addRepresentation("ball+stick", { sele: '@'.concat(seleName.toString()) , aspectRatio: 6, opacity: 0.5})
               // Output to back-end
-              //Shiny.onInputChange('clickedAtoms', clicked);
+              Shiny.onInputChange('clickedAtoms', clicked);
             }
             window.clicked = clicked;
           });
@@ -170,11 +171,10 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB", function(messa
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler('setup', function(message){
   stage.setParameters({
-    cameraType: "orthographic",
-    mousePreset: "coot"
+    cameraType: "orthographic"//, mousePreset: "coot"
   })
-  var newClick = []
-  window.clicked = newClick
+  window.clicked = []
+  //window.clickedNames = []
 })
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB2", function(message){
