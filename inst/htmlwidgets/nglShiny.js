@@ -1,3 +1,8 @@
+window.eventmap = [];
+window.twofofc = [];
+window.fofcpos = [];
+window.fofcneg = [];
+
 HTMLWidgets.widget({
 
   name: 'nglShiny',
