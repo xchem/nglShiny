@@ -56,17 +56,18 @@ HTMLWidgets.widget({
               if (window.clickedRepresentation !== undefined) pickingProxy.component.removeRepresentation(window.clickedRepresentation);
               
               // Remake representation
-              var seleName = []
-              for (var i = 0; i < clicked.length; i++){
-                seleName[i] = clicked[i]
-              }
-              window.clickedRepresentation = pickingProxy.component.addRepresentation("ball+stick", { sele: '@'.concat(seleName.toString()) , aspectRatio: 6, opacity: 0.5});
+              //var seleName = []
+              //for (var i = 0; i < clicked.length; i++){
+              //  seleName[i] = clicked[i]
+              //}
+              window.clickedRepresentation = pickingProxy.component.addRepresentation("ball+stick", { sele: '@'.concat(clicked.toString()) , aspectRatio: 6, opacity: 0.5});
               
               // Output to back-end
               Shiny.onInputChange('clickedAtoms', clicked);
               Shiny.onInputChange('clickNames', clickNames);
             }
             window.clicked = clicked;
+            window.clickedNames = clickNames;
           });
           window.stage = stage;
           //uri = "rcsb://" + options.pdbID;
@@ -157,6 +158,12 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("updateParams", function
     'fogNear': fogNear,
     'fogFar': fogFar,
   });
+})
+
+if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("updateaparam", function(message){
+  let obj = new Object; // equivalent to {}
+  obj[message[0]] = message[1];
+  stage.setParameters(obj);
 })
 
 //------------------------------------------------------------------------------------------------------------------------
