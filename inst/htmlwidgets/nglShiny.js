@@ -1,9 +1,3 @@
-// shameful use of primitive global variables for now 
-window.pdbID = "1crn";
-window.event = "event";
-window.representation = "ball+stick";
-window.colorScheme = "residueIndex";
-//------------------------------------------------------------------------------------------------------------------------
 HTMLWidgets.widget({
 
   name: 'nglShiny',
@@ -36,7 +30,7 @@ HTMLWidgets.widget({
               } else {
                 clicked.push(name);
               }
-              // Possible to put into the above loop, but this all needs fixing up anyway. 
+              // Possible to put into the above loop, but this all needs fixing up anyway.
               // Although poor coding, and twice as computationally expensive, it's easier to understand at the moment.
 
               if (clickNames.includes(fullname)) {
@@ -47,27 +41,26 @@ HTMLWidgets.widget({
                 clickNames.push(fullname);
               }
 
-              
+
               console.log(clickNames);
               console.log(clicked);
 
               // behaviour:
               // Clear existing representations
               if (window.clickedRepresentation !== undefined) pickingProxy.component.removeRepresentation(window.clickedRepresentation);
-              
+
               // Remake representation
-              //var seleName = []
-              //for (var i = 0; i < clicked.length; i++){
-              //  seleName[i] = clicked[i]
-              //}
-              window.clickedRepresentation = pickingProxy.component.addRepresentation("ball+stick", { sele: '@'.concat(clicked.toString()) , aspectRatio: 6, opacity: 0.5});
-              
+              var seleName = []
+              for (var i = 0; i < clicked.length; i++){
+                seleName[i] = clicked[i]
+              }
+              window.clickedRepresentation = pickingProxy.component.addRepresentation("ball+stick", { sele: '@'.concat(seleName.toString()) , aspectRatio: 6, opacity: 0.5});
+
               // Output to back-end
               Shiny.onInputChange('clickedAtoms', clicked);
               Shiny.onInputChange('clickNames', clickNames);
             }
             window.clicked = clicked;
-            window.clickedNames = clickNames;
           });
           window.stage = stage;
           //uri = "rcsb://" + options.pdbID;
@@ -75,7 +68,7 @@ HTMLWidgets.widget({
           window.pdbID = options.pdbID;
           stage.loadFile(uri, {defaultRepresentation: false}).then(function(o){
           o.autoView()
-              }) // then 
+              }) // then
           },
        resize: function(width, height) {
           console.log("entering resize");
@@ -105,7 +98,7 @@ function setComponentNames(x, namedComponents)
      //stage.getComponentsByName(window.pdbID).addRepresentation(rep, {sele: selectionString,
      //                                  name: name})
      } // for name
-   
+
    //component.addRepresentation('ball+stick', {name: 'ligand', sele: 'ligand'})
    //stage.getComponentsByName(window.pdbID).addRepresentation(rep, attributes);
 
@@ -119,7 +112,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("fit", function(message)
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("ligfit", function(message){
     var stringBlob = new Blob( [ window.pdbID ], { type: 'text/plain'} );
     stage.loadFile(stringBlob, { ext: "pdb" }).then(function (comp) {
-      comp.autoView("LIG");    
+      comp.autoView("LIG");
     });
 })
 
@@ -143,7 +136,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setRepresentation", fun
     stage.getComponentsByName(window.pdbID).addRepresentation(rep)
 })
 
-//-------------------- 
+//--------------------
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("updateParams", function(message){
   console.log("nglShiny updateParams");
   var clipDist = message[0];
@@ -158,12 +151,6 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("updateParams", function
     'fogNear': fogNear,
     'fogFar': fogFar,
   });
-})
-
-if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("updateaparam", function(message){
-  let obj = new Object; // equivalent to {}
-  obj[message[0]] = message[1];
-  stage.setParameters(obj);
 })
 
 //------------------------------------------------------------------------------------------------------------------------
@@ -208,12 +195,12 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB2", function(mess
     window.pdbID = pdb;
     var stringBlob = new Blob( [ pdb ], { type: 'text/plain'} );
     console.log("Uploading PDB")
-    stage.setParameters({'clipNear':parseFloat(message[2]), 'clipFar':parseFloat(message[3]), 'clipDist':parseFloat(message[1]), 'fogNear':parseFloat(message[4]), 'fogFar':parseFloat(message[5])});  
+    stage.setParameters({'clipNear':parseFloat(message[2]), 'clipFar':parseFloat(message[3]), 'clipDist':parseFloat(message[1]), 'fogNear':parseFloat(message[4]), 'fogFar':parseFloat(message[5])});
     stage.loadFile(stringBlob, { ext: "pdb" }).then(function (comp) {
-      window.struc = comp.addRepresentation("ball+stick"); 
-      window.ligand = comp.addRepresentation("ball+stick", {sele: "LIG", colorValue: "limegreen", multipleBond: "symmetric"}); 
+      window.struc = comp.addRepresentation("ball+stick");
+      window.ligand = comp.addRepresentation("ball+stick", {sele: "LIG", colorValue: "limegreen", multipleBond: "symmetric"});
       comp.addRepresentation("contact", {sele: "not (water or ion)"});
-      comp.autoView("LIG");  
+      comp.autoView("LIG");
     });
 });
 
@@ -224,10 +211,10 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setapoPDB", function(me
     window.pdbID = pdb;
     var stringBlob = new Blob( [ pdb ], { type: 'text/plain'} );
     console.log("Uploading PDB")
-    //stage.setParameters({'clipNear':parseFloat(message[2]), 'clipFar':parseFloat(message[3]), 'clipDist':parseFloat(message[1]), 'fogNear':parseFloat(message[4]), 'fogFar':parseFloat(message[5])});  
+    //stage.setParameters({'clipNear':parseFloat(message[2]), 'clipFar':parseFloat(message[3]), 'clipDist':parseFloat(message[1]), 'fogNear':parseFloat(message[4]), 'fogFar':parseFloat(message[5])});
     stage.loadFile(stringBlob, { ext: "pdb" }).then(function (comp) {
-      window.struc = comp.addRepresentation("cartoon"); 
-      comp.autoView();  
+      window.struc = comp.addRepresentation("cartoon");
+      comp.autoView();
     });
 });
 
@@ -237,10 +224,10 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addMol", function(messa
     //window.pdbID = pdb;
     var stringBlob = new Blob( [ mol ], { type: 'text/plain'} );
     console.log("Uploading .Mol")
-    //stage.setParameters({'clipNear':parseFloat(message[2]), 'clipFar':parseFloat(message[3]), 'clipDist':parseFloat(message[1]), 'fogNear':parseFloat(message[4]), 'fogFar':parseFloat(message[5])});  
+    //stage.setParameters({'clipNear':parseFloat(message[2]), 'clipFar':parseFloat(message[3]), 'clipDist':parseFloat(message[1]), 'fogNear':parseFloat(message[4]), 'fogFar':parseFloat(message[5])});
     stage.loadFile(stringBlob, { ext: "mol" }).then(function (comp) {
-      comp.addRepresentation("licorice", {multipleBond: "symmetric", opacity:0.25}); 
-      //comp.autoView();  
+      comp.addRepresentation("licorice", {multipleBond: "symmetric", opacity:0.25});
+      //comp.autoView();
     });
 });
 
@@ -254,10 +241,10 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addMolandfocus", functi
     //window.pdbID = pdb;
     var stringBlob = new Blob( [ mol ], { type: 'text/plain'} );
     console.log("Uploading .Mol")
-    //stage.setParameters({'clipNear':parseFloat(message[2]), 'clipFar':parseFloat(message[3]), 'clipDist':parseFloat(message[1]), 'fogNear':parseFloat(message[4]), 'fogFar':parseFloat(message[5])});  
+    //stage.setParameters({'clipNear':parseFloat(message[2]), 'clipFar':parseFloat(message[3]), 'clipDist':parseFloat(message[1]), 'fogNear':parseFloat(message[4]), 'fogFar':parseFloat(message[5])});
     stage.loadFile(stringBlob, { ext: "mol" }).then(function (comp) {
-      window.mol = comp.addRepresentation("licorice", {colorValue: 'limegreen', multipleBond: "symmetric"}); 
-      //comp.autoView();  
+      window.mol = comp.addRepresentation("licorice", {colorValue: 'limegreen', multipleBond: "symmetric"});
+      //comp.autoView();
     });
   }
 });
@@ -274,13 +261,13 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addEvent", function(mes
   console.log("Uploading Event Map")
   var blob = new Blob([byteArray], {type: 'application/octet-binary'});
     stage.loadFile( blob, { ext: message[4] } ).then(function (comp) {
-      window.event = comp.addRepresentation("surface", { color: message[2], 
-                                                  isolevel: parseFloat(message[1]), 
+      window.eventmap = comp.addRepresentation("surface", { color: message[2],
+                                                  isolevel: parseFloat(message[1]),
                                                   negateIsolevel: isTrueSet,
                                                   boxSize:parseFloat(message[5]),
-                                                  smooth: 40, 
-                                                  useWorker: true, 
-                                                  contour:true, 
+                                                  smooth: 40,
+                                                  useWorker: true,
+                                                  contour:true,
                                                   wrap:true}).setVisibility(message[6] === 'true');
     });
 });
@@ -296,13 +283,13 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("add2fofc", function(mes
   var blob = new Blob([byteArray], {type: 'application/octet-binary'});
   console.log("Uploading 2fofc Map")
     stage.loadFile( blob, { ext: message[4] } ).then(function (comp) {
-      window.twofofc = comp.addRepresentation("surface", { color: message[2], 
-                                                  isolevel: parseFloat(message[1]), 
+      window.twofofc = comp.addRepresentation("surface", { color: message[2],
+                                                  isolevel: parseFloat(message[1]),
                                                   negateIsolevel: isTrueSet,
                                                   boxSize:parseFloat(message[5]),
-                                                  smooth: 40, 
-                                                  useWorker: true, 
-                                                  contour:true, 
+                                                  smooth: 40,
+                                                  useWorker: true,
+                                                  contour:true,
                                                   wrap:true}).setVisibility(message[6] === 'true');
     });
 });
@@ -318,16 +305,16 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addfofc_positive", func
   var blob = new Blob([byteArray], {type: 'application/octet-binary'});
   console.log("Uploading fofc positive")
     stage.loadFile( blob, { ext: message[4] } ).then(function (comp) {
-      window.fofcpos = comp.addRepresentation("surface", { color: message[2], 
-                                                  isolevel: parseFloat(message[1]), 
+      window.fofcpos = comp.addRepresentation("surface", { color: message[2],
+                                                  isolevel: parseFloat(message[1]),
                                                   negateIsolevel: false,
                                                   boxSize:parseFloat(message[5]),
-                                                  smooth: 40, 
-                                                  useWorker: true, 
-                                                  contour:true, 
+                                                  smooth: 40,
+                                                  useWorker: true,
+                                                  contour:true,
                                                   wrap:true}).setVisibility(message[6] === 'true');
     });
-}); 
+});
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addfofc_negative", function(message){
   var isTrueSet = (message[3] === 'true');
@@ -340,16 +327,16 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addfofc_negative", func
   var blob = new Blob([byteArray], {type: 'application/octet-binary'});
   console.log("Uploading fofc neg")
     stage.loadFile( blob, { ext: message[4] } ).then(function (comp) {
-      window.fofcneg = comp.addRepresentation("surface", { color: message[2], 
-                                                  isolevel: parseFloat(message[1]), 
+      window.fofcneg = comp.addRepresentation("surface", { color: message[2],
+                                                  isolevel: parseFloat(message[1]),
                                                   negateIsolevel: true,
-                                                  boxSize:parseFloat(message[5]), 
+                                                  boxSize:parseFloat(message[5]),
                                                   smooth: 40,
-                                                  useWorker: true, 
-                                                  contour:true, 
+                                                  useWorker: true,
+                                                  contour:true,
                                                   wrap:true}).setVisibility(message[6] === 'true');
     });
-}); 
+});
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("updateAssembly", function(message){
   console.log("Update Assembly to" + message[0])
@@ -359,7 +346,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("updateAssembly", functi
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("twiddleEvent", function(message){
   console.log("Updating Event Map")
-  window.event.setParameters({isolevel:parseFloat(message[0]),
+  window.eventmap.setParameters({isolevel:parseFloat(message[0]),
                             boxSize:parseFloat(message[1])
                             });
 })
@@ -388,7 +375,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("twiddlefofc_negative", 
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("updateVisabilities", function(message){
   console.log("Updating visability of Map")
-  window.event.setVisibility((message[0] === 'true'))
+  window.eventmap.setVisibility((message[0] === 'true'))
   window.twofofc.setVisibility((message[1] === 'true'))
   window.fofcpos.setVisibility((message[2] === 'true'))
   window.fofcneg.setVisibility((message[3] === 'true'))
