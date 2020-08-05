@@ -209,6 +209,12 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB2", function(mess
     });
 });
 
+if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("updateaparam", function(message){
+  let obj = {}
+  obj[message[0]] = message[1];
+  stage.setParameters(obj);
+})
+
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setapoPDB", function(message){
     stage.removeAllComponents();
     // Assumption, message is R list of n objects
