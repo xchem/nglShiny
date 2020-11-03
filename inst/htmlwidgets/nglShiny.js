@@ -158,6 +158,13 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("updateParams", function
   });
 })
 
+//-------------------------
+if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("updateaparam", function(message){
+  let obj = {}
+  obj[message[0]] = message[1];
+  stage.setParameters(obj);
+})
+
 //------------------------------------------------------------------------------------------------------------------------
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setColorScheme", function(message){
 
@@ -209,12 +216,6 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB2", function(mess
     });
 });
 
-if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("updateaparam", function(message){
-  let obj = {}
-  obj[message[0]] = message[1];
-  stage.setParameters(obj);
-})
-
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setapoPDB", function(message){
     stage.removeAllComponents();
     // Assumption, message is R list of n objects
@@ -222,7 +223,6 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setapoPDB", function(me
     window.pdbID = pdb;
     var stringBlob = new Blob( [ pdb ], { type: 'text/plain'} );
     console.log("Uploading PDB")
-    //stage.setParameters({'clipNear':parseFloat(message[2]), 'clipFar':parseFloat(message[3]), 'clipDist':parseFloat(message[1]), 'fogNear':parseFloat(message[4]), 'fogFar':parseFloat(message[5])});
     stage.loadFile(stringBlob, { ext: "pdb" }).then(function (comp) {
       window.struc = comp.addRepresentation("cartoon");
       comp.autoView();
@@ -260,129 +260,42 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addMolandfocus", functi
   }
 });
 
-
-if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addEvent", function(message){
-  var isTrueSet = (message[3] === 'true');
+//--------------------------------------------------------------------------------------------
+if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler('addVolumeDensity', function(message){
   var byteCharacters = atob(message[0]);
   var byteNumbers = new Array(byteCharacters.length);
-  for (let i = 0; i < byteCharacters.length; i++) {
-    byteNumbers[i] = byteCharacters.charCodeAt(i);
-  };
-  var byteArray = new Uint8Array(byteNumbers);
-  console.log("Uploading Event Map")
-  var blob = new Blob([byteArray], {type: 'application/octet-binary'});
-    stage.loadFile( blob, { ext: message[4] } ).then(function (comp) {
-      window.eventmap = comp.addRepresentation("surface", { color: message[2],
-                                                  isolevel: parseFloat(message[1]),
-                                                  negateIsolevel: isTrueSet,
-                                                  boxSize:parseFloat(message[5]),
-                                                  smooth: 40,
-                                                  useWorker: true,
-                                                  contour:true,
-                                                  wrap:true}).setVisibility(message[6] === 'true');
-    });
-});
-
-if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("add2fofc", function(message){
-  var isTrueSet = (message[3] === 'true');
-  var byteCharacters = atob(message[0]);
-  var byteNumbers = new Array(byteCharacters.length);
-  for (let i = 0; i < byteCharacters.length; i++) {
+  for (let i = 0; i < byteCharacters.length; i++){
     byteNumbers[i] = byteCharacters.charCodeAt(i);
   };
   var byteArray = new Uint8Array(byteNumbers);
   var blob = new Blob([byteArray], {type: 'application/octet-binary'});
-  console.log("Uploading 2fofc Map")
-    stage.loadFile( blob, { ext: message[4] } ).then(function (comp) {
-      window.twofofc = comp.addRepresentation("surface", { color: message[2],
-                                                  isolevel: parseFloat(message[1]),
-                                                  negateIsolevel: isTrueSet,
-                                                  boxSize:parseFloat(message[5]),
-                                                  smooth: 40,
-                                                  useWorker: true,
-                                                  contour:true,
-                                                  wrap:true}).setVisibility(message[6] === 'true');
-    });
+  stage.loadFile( blob, { ext: message[4] } ).then(function (comp) {
+    window[message[7]] = comp.addRepresentation('surface', {
+      isolevel: parseFloat(message[1]),
+      color: message[2],
+      negateIsolevel: message[3] === 'true',
+      boxSize: parseFloat(message[5]),
+      smooth: 40,
+      useWorker: true,
+      contour: true,
+      wrap: true
+    }).setVisibility(message[6] === 'true');
+  });
 });
 
-if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addfofc_positive", function(message){
-  var isTrueSet = (message[3] === 'true');
-  var byteCharacters = atob(message[0]);
-  var byteNumbers = new Array(byteCharacters.length);
-  for (let i = 0; i < byteCharacters.length; i++) {
-    byteNumbers[i] = byteCharacters.charCodeAt(i);
-  };
-  var byteArray = new Uint8Array(byteNumbers);
-  var blob = new Blob([byteArray], {type: 'application/octet-binary'});
-  console.log("Uploading fofc positive")
-    stage.loadFile( blob, { ext: message[4] } ).then(function (comp) {
-      window.fofcpos = comp.addRepresentation("surface", { color: message[2],
-                                                  isolevel: parseFloat(message[1]),
-                                                  negateIsolevel: false,
-                                                  boxSize:parseFloat(message[5]),
-                                                  smooth: 40,
-                                                  useWorker: true,
-                                                  contour:true,
-                                                  wrap:true}).setVisibility(message[6] === 'true');
-    });
-});
 
-if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addfofc_negative", function(message){
-  var isTrueSet = (message[3] === 'true');
-  var byteCharacters = atob(message[0]);
-  var byteNumbers = new Array(byteCharacters.length);
-  for (let i = 0; i < byteCharacters.length; i++) {
-    byteNumbers[i] = byteCharacters.charCodeAt(i);
-  };
-  var byteArray = new Uint8Array(byteNumbers);
-  var blob = new Blob([byteArray], {type: 'application/octet-binary'});
-  console.log("Uploading fofc neg")
-    stage.loadFile( blob, { ext: message[4] } ).then(function (comp) {
-      window.fofcneg = comp.addRepresentation("surface", { color: message[2],
-                                                  isolevel: parseFloat(message[1]),
-                                                  negateIsolevel: true,
-                                                  boxSize:parseFloat(message[5]),
-                                                  smooth: 40,
-                                                  useWorker: true,
-                                                  contour:true,
-                                                  wrap:true}).setVisibility(message[6] === 'true');
-    });
-});
+if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler('updateVolumeDensity', function(message){
+  window[message[0]].setParameters({
+    isolevel: parseFloat(message[1]),
+    boxSize: parseFloat(message[2])
+  });
+})
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("updateAssembly", function(message){
   console.log("Update Assembly to" + message[0])
   window.struc.setParameters({assembly:message[0]});
   window.ligand.setParameters({colorValue: "limegreen"})
 })
-
-if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("twiddleEvent", function(message){
-  console.log("Updating Event Map")
-  window.eventmap.setParameters({isolevel:parseFloat(message[0]),
-                            boxSize:parseFloat(message[1])
-                            });
-})
-
-if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("twiddle2fofc", function(message){
-  console.log("Updating 2fofc Map")
-  window.twofofc.setParameters({isolevel:parseFloat(message[0]),
-                            boxSize:parseFloat(message[1])
-                            });
-})
-
-if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("twiddlefofc_positive", function(message){
-  console.log("Updating Positive Fofc Map")
-  window.fofcpos.setParameters({isolevel:parseFloat(message[0]),
-                            boxSize:parseFloat(message[1])
-                            });
-})
-
-if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("twiddlefofc_negative", function(message){
-  console.log("Updating Negative Fofc Map")
-  window.fofcneg.setParameters({isolevel:parseFloat(message[0]),
-                            boxSize:parseFloat(message[1])
-                            });
-})
-
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("updateVisabilities", function(message){
   console.log("Updating visability of Map")
