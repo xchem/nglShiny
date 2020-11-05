@@ -260,25 +260,32 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addMolandfocus", functi
 
 //--------------------------------------------------------------------------------------------
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler('addVolumeDensity', function(message){
-  var byteCharacters = atob(message[0]);
-  var byteNumbers = new Array(byteCharacters.length);
-  for (let i = 0; i < byteCharacters.length; i++){
-    byteNumbers[i] = byteCharacters.charCodeAt(i);
-  };
-  var byteArray = new Uint8Array(byteNumbers);
-  var blob = new Blob([byteArray], {type: 'application/octet-binary'});
-  stage.loadFile( blob, { ext: message[4] } ).then(function (comp) {
-    window[message[7]] = comp.addRepresentation('surface', {
-      isolevel: parseFloat(message[1]),
-      color: message[2],
-      negateIsolevel: message[3] === 'true',
-      boxSize: parseFloat(message[5]),
-      smooth: 40,
-      useWorker: true,
-      contour: true,
-      wrap: false
-    }).setVisibility(message[6] === 'true');
-  });
+  try {
+    console.log('Clearing')
+    window[message[7]].dispose()
+    console.log('Cleared!')
+  } 
+  finally {
+    var byteCharacters = atob(message[0]);
+    var byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++){
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    };
+    var byteArray = new Uint8Array(byteNumbers);
+    var blob = new Blob([byteArray], {type: 'application/octet-binary'});
+    stage.loadFile( blob, { ext: message[4] } ).then(function (comp) {
+      window[message[7]] = comp.addRepresentation('surface', {
+        isolevel: parseFloat(message[1]),
+        color: message[2],
+        negateIsolevel: message[3] === 'true',
+        boxSize: parseFloat(message[5]),
+        smooth: 40,
+        useWorker: true,
+        contour: true,
+        wrap: false
+      }).setVisibility(message[6] === 'true');
+    });
+  }
 });
 
 
