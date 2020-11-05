@@ -224,9 +224,10 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setapoPDB", function(me
     var stringBlob = new Blob( [ pdb ], { type: 'text/plain'} );
     console.log("Uploading PDB")
     stage.loadFile(stringBlob, { ext: "pdb" }).then(function (comp) {
-      window.struc = comp.addRepresentation("cartoon");
+      window.struc = comp.addRepresentation(message[1]);
       comp.autoView();
     });
+    stage.autoView()
 });
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addMol", function(message){
@@ -243,21 +244,18 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addMol", function(messa
 });
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addMolandfocus", function(message){
-    try {
-      window.mol.setVisibility(false)
-    }
-    finally {
-    // Assumption, message is R list of n objects
+    //try {
+    //  window.mol.setVisibility(false)
+    //}
+    //finally {
     var mol = message[0];
-    //window.pdbID = pdb;
     var stringBlob = new Blob( [ mol ], { type: 'text/plain'} );
     console.log("Uploading .Mol")
-    //stage.setParameters({'clipNear':parseFloat(message[2]), 'clipFar':parseFloat(message[3]), 'clipDist':parseFloat(message[1]), 'fogNear':parseFloat(message[4]), 'fogFar':parseFloat(message[5])});
-    stage.loadFile(stringBlob, { ext: "mol" }).then(function (comp) {
+    stage.loadFile(stringBlob, { ext: message[1] }).then(function (comp) {
       window.mol = comp.addRepresentation("licorice", {colorValue: 'limegreen', multipleBond: "symmetric"});
-      //comp.autoView();
+      comp.autoView();
     });
-  }
+  //}
 });
 
 //--------------------------------------------------------------------------------------------
@@ -278,18 +276,28 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler('addVolumeDensity', func
       smooth: 40,
       useWorker: true,
       contour: true,
-      wrap: true
+      wrap: false
     }).setVisibility(message[6] === 'true');
   });
 });
 
 
-if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler('updateVolumeDensity', function(message){
+if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler('updateVolumeDensityISO', function(message){
   window[message[0]].setParameters({
-    isolevel: parseFloat(message[1]),
-    boxSize: parseFloat(message[2])
+    isolevel: parseFloat(message[1])
   });
-})
+});
+
+if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler('updateVolumeDensityBoxSize', function(message){
+  window[message[0]].setParameters({
+    boxSize: parseFloat(message[1])
+  });
+});
+
+if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("updateVolumeDensityVisability", function(message){
+  window[message[0]].setVisibility((message[1]=='true'))
+});
+
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("updateAssembly", function(message){
   console.log("Update Assembly to" + message[0])
@@ -297,13 +305,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("updateAssembly", functi
   window.ligand.setParameters({colorValue: "limegreen"})
 })
 
-if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("updateVisabilities", function(message){
-  console.log("Updating visability of Map")
-  window.eventmap.setVisibility((message[0] === 'true'))
-  window.twofofc.setVisibility((message[1] === 'true'))
-  window.fofcpos.setVisibility((message[2] === 'true'))
-  window.fofcneg.setVisibility((message[3] === 'true'))
-})
+
 
 //------------------------------------------------------------------------------------------------------------------------
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("select", function(message){
