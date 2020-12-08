@@ -77,7 +77,7 @@ HTMLWidgets.widget({
           },
        resize: function(width, height) {
           console.log("entering resize");
-          correctedHeight = window.innerHeight * 0.9;
+          correctedHeight = window.innerHeight * 0.7;
           $("#nglShiny").height(correctedHeight);
           console.log("nglShiny.resize: " + width + ", " + correctedHeight + ": " + height);
           stage.handleResize()
@@ -231,14 +231,13 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setapoPDB", function(me
 });
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addMol", function(message){
-    // Assumption, message is R list of n objects
     var mol = message[0];
-    //window.pdbID = pdb;
     var stringBlob = new Blob( [ mol ], { type: 'text/plain'} );
     console.log("Uploading .Mol")
-    //stage.setParameters({'clipNear':parseFloat(message[2]), 'clipFar':parseFloat(message[3]), 'clipDist':parseFloat(message[1]), 'fogNear':parseFloat(message[4]), 'fogFar':parseFloat(message[5])});
+    console.log('New Message!!')
+    console.log(mol)
     stage.loadFile(stringBlob, { ext: "mol" }).then(function (comp) {
-      comp.addRepresentation("licorice", {multipleBond: "symmetric", opacity:0.25});
+      comp.addRepresentation("licorice", {multipleBond: "symmetric", opacity:.25});
       //comp.autoView();
     });
 });
@@ -257,6 +256,22 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addMolandfocus", functi
     });
   //}
 });
+
+if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("fv_addMolandfocus", function(message){
+    try {
+      window.mol.setVisibility(false)
+    }
+    finally {
+    var mol = message[0];
+    var stringBlob = new Blob( [ mol ], { type: 'text/plain'} );
+    console.log("Uploading .Mol")
+    stage.loadFile(stringBlob, { ext: "mol"}).then(function (comp) {
+      window.mol = comp.addRepresentation("licorice", {colorValue: 'limegreen', multipleBond: "symmetric"});
+      //comp.autoView();
+    });
+  }
+});
+
 
 //--------------------------------------------------------------------------------------------
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler('addVolumeDensity', function(message){
