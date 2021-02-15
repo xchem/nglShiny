@@ -165,6 +165,13 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("updateaparam", function
   stage.setParameters(obj);
 })
 
+if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("as_resetclicked", function(message){
+  window.clicked = [];
+  window.clickNames = [];
+  Shiny.onInputChange('clickedAtoms', window.clicked);
+  Shiny.onInputChange('clickNames', window.clickNames);
+})
+
 //------------------------------------------------------------------------------------------------------------------------
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setColorScheme", function(message){
 
