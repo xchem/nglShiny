@@ -21,7 +21,7 @@ HTMLWidgets.widget({
           stage.signals.clicked.add(function (pickingProxy) {
             const clicked = window.clicked;
             const clickNames = window.clickNames;
-            if (pickingProxy && (pickingProxy.atom || pickingProxy.bond )){
+            if (pickingProxy.altKey===true && (pickingProxy.atom || pickingProxy.bond )){
               const atom = pickingProxy.atom || pickingProxy.closestBondAtom;
 
               const fullname = atom.qualifiedName();
