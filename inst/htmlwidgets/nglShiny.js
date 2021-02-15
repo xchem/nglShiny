@@ -168,6 +168,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("updateaparam", function
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("as_resetclicked", function(message){
   window.clicked = [];
   window.clickNames = [];
+  // No idea if this messes things up...
   Shiny.onInputChange('clickedAtoms', window.clicked);
   Shiny.onInputChange('clickNames', window.clickNames);
 })
