@@ -171,6 +171,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("as_resetclicked", funct
   // No idea if this messes things up...
   Shiny.onInputChange('clickedAtoms', window.clicked);
   Shiny.onInputChange('clickNames', window.clickNames);
+  window.clickedRepresentation.setVisibility(false) // Just flick it off...
 })
 
 //------------------------------------------------------------------------------------------------------------------------
