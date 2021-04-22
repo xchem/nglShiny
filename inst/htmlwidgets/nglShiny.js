@@ -233,7 +233,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setapoPDB", function(me
     var stringBlob = new Blob( [ pdb ], { type: 'text/plain'} );
     console.log("Uploading PDB")
     stage.loadFile(stringBlob, { ext: "pdb" }).then(function (comp) {
-      window.struc = comp.addRepresentation(message[1]);
+      window.struc = comp.addRepresentation(message[1], {'linewidth':3});
       comp.autoView();
     });
     stage.autoView()
