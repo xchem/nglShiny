@@ -72,7 +72,7 @@ HTMLWidgets.widget({
           uri = options.pdbID;
           window.pdbID = options.pdbID;
           stage.loadFile(uri, {defaultRepresentation: false}).then(function(o){
-          o.autoView()
+          o.autoView(500)
               }) // then
           },
        resize: function(width, height) {
@@ -111,7 +111,7 @@ function setComponentNames(x, namedComponents)
 //------------------------------------------------------------------------------------------------------------------------
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("fit", function(message){
     console.log("nglShiny fit");
-    stage.autoView();
+    stage.autoView(500);
 });
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("ligfit", function(message){
@@ -197,7 +197,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB", function(messa
       })
        // redundant?
     stage.getComponentsByName(window.pdbID).addRepresentation(window.representation, {colorScheme: window.colorScheme})
-    stage.autoView()
+    stage.autoView(3000)
     })
 
 
@@ -234,9 +234,13 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setapoPDB", function(me
     console.log("Uploading PDB")
     stage.loadFile(stringBlob, { ext: "pdb" }).then(function (comp) {
       window.struc = comp.addRepresentation(message[1]);
-      comp.autoView();
+      if (message[2] === 'true') {
+        comp.autoView(3000)
+      }
     });
-    stage.autoView()
+    if (message[2] === 'true') {
+      stage.autoView(3000)
+    }
 });
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addMol", function(message){
@@ -257,14 +261,37 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addMolandfocus", functi
     //}
     //finally {
     var mol = message[0];
+    window.molstring = mol
     var stringBlob = new Blob( [ mol ], { type: 'text/plain'} );
     console.log("Uploading .Mol")
     stage.loadFile(stringBlob, { ext: message[1] }).then(function (comp) {
       window.mol = comp.addRepresentation("licorice", {colorValue: 'limegreen', multipleBond: "symmetric"});
-      comp.autoView();
+      if (message[2] === 'true') {
+        comp.autoView(3000)
+      }
     });
   //}
 });
+
+if (HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler('save_camera_pos', function (message)
+{
+  window.om = stage.viewerControls.getOrientation()
+});
+
+if (HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler('restore_camera_pos', function (message)
+{
+  stage.animationControls.orient(window.om, 3000);
+});
+
+if (HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler('focus_on_mol', function (message)
+{
+  var stringBlob = new Blob([window.molstring], { type: 'text/plain' });
+  stage.loadFile(stringBlob, { ext: 'mol' }).then(function (comp)
+  {
+    comp.addRepresentation('ball+stick', { aspectRatio: 0, radius: 0 })
+    comp.autoView(3000)
+  })
+})
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("fv_addMolandfocus", function(message){
     try {
@@ -280,6 +307,34 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("fv_addMolandfocus", fun
     });
   }
 });
+
+if (HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler('go_to_residue', function (message)
+{
+  var gotores = window.pdbID
+  var stringBlob = new Blob( [ gotores ], { type: 'text/plain'} );
+  console.log("Go To:")
+  console.log(message[0])
+  stage.loadFile(stringBlob, { ext: "pdb" }).then(function (comp)
+  { 
+    comp.addRepresentation('ball+stick', {aspectRatio:0, radius:0, sele: message[0]})
+    comp.autoView(message[0], 3000)
+  })
+})
+
+if (HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler('highlight_residues', function (message)
+{
+  try {
+    window.highlight.dispose()
+  }
+  finally {
+    var viewedstruc = window.pdbID
+    var stringBlob = new Blob([viewedstruc], { type: 'text/plain' });
+    stage.loadFile(stringBlob, { ext: "pdb" }).then(function (comp)
+    { 
+      window.highlight = comp.addRepresentation('ball+stick', {color:'magenta', sele: message[0]})
+    })
+  }
+})
 
 
 //--------------------------------------------------------------------------------------------
