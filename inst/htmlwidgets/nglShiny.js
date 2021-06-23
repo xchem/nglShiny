@@ -354,11 +354,13 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler('addVolumeDensity', func
     var blob = new Blob([byteArray], {type: 'application/octet-binary'});
     stage.loadFile( blob, { ext: message[4] } ).then(function (comp) {
       window[message[7]] = comp.addRepresentation('surface', {
+        isolevelType: 'sigma',
+        background: true,
         isolevel: parseFloat(message[1]),
         color: message[2],
         negateIsolevel: message[3] === 'true',
         boxSize: parseFloat(message[5]),
-        smooth: 40,
+        smooth: 10,
         useWorker: true,
         contour: true,
         wrap: false
