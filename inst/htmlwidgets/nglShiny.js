@@ -354,7 +354,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler('addVolumeDensity', func
     var blob = new Blob([byteArray], {type: 'application/octet-binary'});
     stage.loadFile( blob, { ext: message[4] } ).then(function (comp) {
       window[message[7]] = comp.addRepresentation('surface', {
-        isolevelType: 'value',
+        isolevelType: message[8],
         background: true,
         isolevel: parseFloat(message[1]),
         color: message[2],
