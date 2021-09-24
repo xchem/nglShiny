@@ -308,6 +308,24 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("fv_addMolandfocus", fun
   }
 });
 
+if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("clear_window_field", function(message){
+    if(!window[message[0]]){
+      window[message[0]]=[]
+    } else {
+      window[message[0]].map(x => x.setVisibility(false))
+      window[message[0]] = []
+    }
+})
+
+if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("fv_addMolandfocus_withcolor", function(message){
+    if(!window.othermol) window.othermol=[]
+    var mol = message[0];
+    var stringBlob = new Blob( [ mol ], { type: 'text/plain'} );
+    stage.loadFile(stringBlob, { ext: "mol"}).then(function (comp) {
+      window.othermol.push(comp.addRepresentation("licorice", {colorValue: message[1], multipleBond: "symmetric"}));
+    });
+})
+
 if (HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler('go_to_residue', function (message)
 {
   var gotores = window.pdbID
