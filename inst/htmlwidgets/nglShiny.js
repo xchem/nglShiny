@@ -322,6 +322,8 @@ if(HTMLWidget.shinyMode) Shiny.addCustomMessageHandler('setBFactor', function(me
   var pdb = message[0];
   var stringBlob = new Blob( [ pdb ], { type: 'text/plain'} );
   stage.loadFile(stringBlob, { ext: "pdb"}).then(function (comp) {
+      console.log('Rendering Bfactor')
+      window.ojojoj = comp.addRepresentation("line", {colorValue: 'bfactor', linewidth:6})
       window['bfactors'].push(comp.addRepresentation("line", {colorValue: 'bfactor', linewidth:6}));
   });
 })
