@@ -317,7 +317,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("clear_window_field", fu
     }
 })
 
-if(HTMLWidget.shinyMode) Shiny.addCustomMessageHandler('setBFactor', function(message){
+if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler('setBFactor', function(message){
   if(!window['bfactors']) window['bfactors'] = []
   var pdb = message[0];
   var stringBlob = new Blob( [ pdb ], { type: 'text/plain'} );
