@@ -243,6 +243,10 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setapoPDB", function(me
     }
 });
 
+if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler('messageDump', function(message){
+  console.log(message)
+})
+
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addContacts", function(message){
   var pdb = message[0];
   window.contactID = pdb
