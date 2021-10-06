@@ -250,7 +250,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addContacts", function(
   stage.loadFile(stringBlob, { ext: "pdb" }).then(function (comp) {
     window.contacts = comp.addRepresentation('contact')
   })
-}
+})
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addMol", function(message){
     var mol = message[0];
