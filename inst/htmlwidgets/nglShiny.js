@@ -1,7 +1,3 @@
-window.eventmap = [];
-window.twofofc = [];
-window.fofcpos = [];
-window.fofcneg = [];
 
 HTMLWidgets.widget({
 
@@ -108,6 +104,54 @@ function setComponentNames(x, namedComponents)
    //stage.getComponentsByName(window.pdbID).addRepresentation(rep, attributes);
 
 } // setComponentNames
+
+if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addFileHandler", function(message){
+  // Pretty much every other function in this file can be done using this multiple times.
+  /* Some Fields that do things before representationParameters
+    message.clearStage
+    message.object_name
+    message.window_object
+    message.clearWindow
+    message.filestring
+    message.extension
+    message.representation
+    message.autoView
+    message.isBinary
+  */
+  if(message.clearStage){ // Blank SlatEe?
+    stage.removeAllComponents()
+  }
+  if(message.window_object){ // Initialise the window object if missing
+    if(!window[message.window_object]){
+      window[message.window_object] = {}
+    }
+    if(message.clearWindow){ // Reset the object and dispose of current components if present, if asked for.
+      if (Object.entries(window[message.window_object]).length > 0){
+        Object.entries(window[message.window_object]).map(y => { x[1].dispose(); delete window[message.window_object][x[0]] })
+      }
+      window[message.window_object] = {}
+    }
+  }
+  if(message.isBinary){ // Read data, if binary convert b64 string to bytes array then, blob. otherwise blob
+    var byteCharacters = atob(message.filestring);
+    var byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++){
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    };
+    var byteArray = new Uint8Array(byteNumbers);
+    var blob = new Blob([byteArray], {type: 'application/octet-binary'});
+  } else {
+    var blob = new Blob([message.filestring], {type: 'text/plain'});
+  }
+  stage.loadFile(blob, { ext: message.extension }).then(function(comp){ // Render component using specific representation and remaining options in message.
+    window[message.window_object][message.object_name] = comp.addRepresentation(message.representation, message)
+    if(message.autoView){comp.autoView(3000)}
+  })
+})
+
+
+
+
 //------------------------------------------------------------------------------------------------------------------------
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("fit", function(message){
     console.log("nglShiny fit");
@@ -386,6 +430,10 @@ if (HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler('highlight_residues', f
 
 //--------------------------------------------------------------------------------------------
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler('addVolumeDensity', function(message){
+  if(!window['eventmap']) window['eventmap'] = []
+  if(!window['twofofc']) window['twofofc'] = []
+  if(!window['fofcpos']) window['fofcpos'] = []
+  if(!window['fofcneg']) window['fofcneg'] = []
   try {
     console.log('Clearing')
     window[message[7]].dispose()
