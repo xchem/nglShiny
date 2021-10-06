@@ -243,6 +243,15 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setapoPDB", function(me
     }
 });
 
+if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addContacts", function(message){
+  var pdb = message[0];
+  window.contactID = pdb
+  var stringBlob = new Blob( [ pdb ], { type: 'text/plain'} );
+  stage.loadFile(stringBlob, { ext: "pdb" }).then(function (comp) {
+    window.contacts = comp.addRepresentation('contact')
+  })
+}
+
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addMol", function(message){
     var mol = message[0];
     var stringBlob = new Blob( [ mol ], { type: 'text/plain'} );
@@ -315,6 +324,12 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("clear_window_field", fu
       window[message[0]].map(x => x.setVisibility(false))
       window[message[0]] = []
     }
+})
+
+if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler('setVisibility', function(message){
+  if(window[message[0]]){
+    window[message[0]].setVisibility()
+  }
 })
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler('setBFactor', function(message){
