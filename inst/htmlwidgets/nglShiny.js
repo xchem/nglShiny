@@ -107,6 +107,7 @@ function setComponentNames(x, namedComponents)
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addFileHandler", function(message){
   // Pretty much every other function in this file can be done using this multiple times.
+  // Representations available here: https://nglviewer.org/ngl/api/manual/molecular-representations.html
   /* Some Fields that do things before representationParameters
     message.clearStage
     message.object_name
@@ -121,16 +122,23 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addFileHandler", functi
   if(message.clearStage){ // Blank SlatEe?
     stage.removeAllComponents()
   }
-  if(message.window_object){ // Initialise the window object if missing
-    if(!window[message.window_object]){
-      window[message.window_object] = {}
-    }
-    if(message.clearWindow){ // Reset the object and dispose of current components if present, if asked for.
-      if (Object.entries(window[message.window_object]).length > 0){
-        Object.entries(window[message.window_object]).map(y => { x[1].dispose(); delete window[message.window_object][x[0]] })
+  if(!window[message.window_object]){
+    window[message.window_object] = {}
+  }
+  if(message.clearWindow){ // Reset the object and dispose of current components if present, if asked for.
+    console.log(message.window_object)
+    iter = Object.entries(window[message.window_object]).map(x => x[0])
+    for (let i = 0; i < iter.length; i++) {
+      console.log(iter[i])
+      try{
+        window[message.window_object][iter[i]].dispose()
       }
-      window[message.window_object] = {}
+      catch(err) {
+        console.log('')
+      }
     }
+    delete window[message.window_object]
+    window[message.window_object] = {}
   }
   if(message.isBinary){ // Read data, if binary convert b64 string to bytes array then, blob. otherwise blob
     var byteCharacters = atob(message.filestring);
@@ -145,8 +153,28 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addFileHandler", functi
   }
   stage.loadFile(blob, { ext: message.extension }).then(function(comp){ // Render component using specific representation and remaining options in message.
     window[message.window_object][message.object_name] = comp.addRepresentation(message.representation, message)
-    if(message.autoView){comp.autoView(3000)}
+    if(!message.autoView === undefined){ message.autoView ? comp.autoView(3000) : false}
+    if(!message.visible === undefined){ window[message.window_object][message.object_name].setVisibility(message.visible) }
   })
+})
+
+if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("componentParameterHandler", function(message){
+  if(!message.object_name === undefined){
+    window[message.window_object][message.object_name].setParameters(message)
+    if(!message.visible === undefined) window[message.window_object][message.object_name].setVisibility(message.visible)
+  } else {
+    Object.entries(window[message.window_object]).map(x => {
+      return {
+        'p' : x[1].setParameters(message),
+        'v' : message.visible === undefined ? true : x[1].setVisibility(message.visible)
+      }
+    })
+  }
+})
+
+// Replaces a bunch of other things itself.
+if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler('stageParameterHandler', function(message) {
+  stage.setParameters(message)
 })
 
 
