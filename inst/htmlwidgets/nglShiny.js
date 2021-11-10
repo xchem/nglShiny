@@ -76,7 +76,7 @@ HTMLWidgets.widget({
           correctedHeight = window.innerHeight * 0.7;
           $("#nglShiny").height(correctedHeight);
           console.log("nglShiny.resize: " + width + ", " + correctedHeight + ": " + height);
-          stage.handleResize()
+          //stage.handleResize()
           }
     } // return
   } // factory
@@ -116,7 +116,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addFileHandler", functi
     message.filestring
     message.extension
     message.representation
-    message.autoView
+    message.autoview
     message.isBinary
   */
   if(message.clearStage){ // Blank SlatEe?
@@ -153,7 +153,10 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("addFileHandler", functi
   }
   stage.loadFile(blob, { ext: message.extension }).then(function(comp){ // Render component using specific representation and remaining options in message.
     window[message.window_object][message.object_name] = comp.addRepresentation(message.representation, message)
-    if(!message.autoView === undefined){ message.autoView ? comp.autoView(3000) : false}
+    if(message.autoview) {
+        console.log('AutoViewing......')
+        comp.autoView(3000) 
+    }
     if(!message.visible === undefined){ window[message.window_object][message.object_name].setVisibility(message.visible) }
   })
 })
@@ -293,7 +296,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB2", function(mess
       window.struc = comp.addRepresentation("ball+stick");
       window.ligand = comp.addRepresentation("ball+stick", {sele: "LIG", colorValue: "limegreen", multipleBond: "symmetric"});
       comp.addRepresentation("contact", {sele: "not (water or ion)"});
-      comp.autoView("LIG");
+      comp.autoView(message[6]);
     });
 });
 
