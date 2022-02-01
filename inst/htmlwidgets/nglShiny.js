@@ -28,7 +28,7 @@ HTMLWidgets.widget({
                     if (x.isBackbone() === true) return 0;
                   }
                   fullname = x.qualifiedName()
-                  name = x.index()
+                  name = x.index
 
                   if (clicked.includes(name)){
                     for(var i = 0; i < clicked.length; i++){
