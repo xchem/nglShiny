@@ -17,54 +17,67 @@ HTMLWidgets.widget({
           stage.signals.clicked.add(function (pickingProxy) {
             const clicked = window.clicked;
             const clickNames = window.clickNames;
+            // This can be easily reorgnised... Lots of repitive code!!
             if (pickingProxy.altKey===true && (pickingProxy.atom || pickingProxy.bond )){
               const atom = pickingProxy.atom || pickingProxy.closestBondAtom;
+              if (pickingProxy.ctrlKey===true){
+                const residue = atom.residue
+                residue.eachAtom(function(x){
+                  if (pickingProxy.shiftKey === false){
+                    // If shift was not pressed, ignore backbone atom
+                    if (x.isBackbone() === true) return 0;
+                  }
+                  fullname = x.qualifiedName()
+                  name = x.index()
 
-              const fullname = atom.qualifiedName();
-              const name = atom.index;
+                  if (clicked.includes(name)){
+                    for(var i = 0; i < clicked.length; i++){
+                      if(clicked[i] === name) {clicked.split(i,1);}
+                    }
+                  } else {
+                    clicked.push(name)
+                  }
+                  if (clickNames.includes(fullname)){
+                    for(var i = 0; i < clicked.length; i++){
+                      if(clicked[i] === name) {clicked.split(i,1);}
+                    }
+                  } else {
+                    clickNames.push(fullname)
+                  }
 
-              // Check if clicked atom is in array
-              if (clicked.includes(name)) {
-                for(var i = 0; i < clicked.length; i++){
-                  if (clicked[i] === name){clicked.splice(i,1); }
-                }
+                })
               } else {
-                clicked.push(name);
-              }
-              // Possible to put into the above loop, but this all needs fixing up anyway.
-              // Although poor coding, and twice as computationally expensive, it's easier to understand at the moment.
-
-              if (clickNames.includes(fullname)) {
-                for(var i = 0; i < clickNames.length; i++){
-                  if (clickNames[i] === fullname) {clickNames.splice(i,1)}
+                const fullname = atom.qualifiedName();
+                const name = atom.index;
+                if (clicked.includes(name)) {
+                  for(var i = 0; i < clicked.length; i++){
+                    if (clicked[i] === name){clicked.splice(i,1); }
+                  }
+                } else {
+                  clicked.push(name);
                 }
-              } else {
-                clickNames.push(fullname);
+                if (clickNames.includes(fullname)) {
+                  for(var i = 0; i < clickNames.length; i++){
+                    if (clickNames[i] === fullname) {clickNames.splice(i,1)}
+                  }
+                } else {
+                  clickNames.push(fullname);
+                }
               }
-
-
-              console.log(clickNames);
-              console.log(clicked);
-
-              // behaviour:
-              // Clear existing representations
               if (window.clickedRepresentation !== undefined) pickingProxy.component.removeRepresentation(window.clickedRepresentation);
-
-              // Remake representation
               var seleName = []
               for (var i = 0; i < clicked.length; i++){
                 seleName[i] = clicked[i]
               }
               window.clickedRepresentation = pickingProxy.component.addRepresentation("ball+stick", { sele: '@'.concat(seleName.toString()) , aspectRatio: 6, opacity: 0.5});
-
               // Output to back-end
               Shiny.onInputChange('clickedAtoms', clicked);
               Shiny.onInputChange('clickNames', clickNames);
             }
             window.clicked = clicked;
+            window.clickNames = clickNames;
           });
           window.stage = stage;
-          //uri = "rcsb://" + options.pdbID;
           uri = options.pdbID;
           window.pdbID = options.pdbID;
           stage.loadFile(uri, {defaultRepresentation: false}).then(function(o){
