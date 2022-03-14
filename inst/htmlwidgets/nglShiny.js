@@ -611,7 +611,9 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB2", function(mess
     });
 });
 
-if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler('setBadAtomsPDB', function(message){
+
+// I dont know why it's not firing off....
+if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setBadAtomsPDB", function(message){
     stage.removeAllComponents();
     console.log('Set Bad Atoms')
     console.log([message[3], message[4]])
@@ -630,9 +632,10 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler('setBadAtomsPDB', functi
     }
     // Message[3] = badids string
     // message[4] = badcomments (if any)
-    readPDBFixedStyle(stringBlob, message[3], message[4])
-})
+    readPDBFixedStyle(filestring=stringBlob,badids=message[3],badcomments=message[4]);
+});
 
+// Its really odd...
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setBadMolandfocus", function(message){
     var mol = message[0];
     window.molstring = mol
@@ -644,7 +647,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setBadMolandfocus", fun
         comp.autoView(3000)
       }
     });
-    readFileFixedStyle(stringBlob, message[3], message[4])
+    readFileFixedStyle(filestring=stringBlob,badids=message[3],badcomments=message[4]);
 });
 
 
