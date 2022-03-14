@@ -170,6 +170,10 @@ function drawStripyBond(atom_a, atom_b, color_a, color_b, label, size=0.1, shape
 function readFileFixedStyle(file, badids, badcomments){
   //fetch(file).then(response => response.text()).then(function(x){
     let x = file
+    var mol = x;
+    window.molstring = x
+    var stringBlob = new Blob( [ mol ], { type: 'text/plain'} );
+    console.log("Uploading .Mol")
     badids = badids.split(';').map(x => parseInt(x));
     badcomments = badcomments.split(';')
     var regexp = /[CSONFBHLPIZM]/g; // Should be expanded to all atoms?
@@ -179,7 +183,7 @@ function readFileFixedStyle(file, badids, badcomments){
     } 
     var idx = [...Array(matches.length).keys()]
     let diff = idx.filter(x => !badids.includes(x)) 
-    stage.loadFile(file).then(function(o){
+    stage.loadFile(stringBlob,{ext:"mol"}).then(function(o){
       // Create Frame, balls don't render, nor do bonds
       o.addRepresentation('ball+stick', {aspectRatio:0, radius:0,
                                            multipleBond:'symmetric'}); 
@@ -282,6 +286,9 @@ function readFileFixedStyle(file, badids, badcomments){
 
 function readPDBFixedStyle(file, badids, badcomments){
   let x = file // Convert from string?
+  var pdb = x;
+  window.pdbstring = x
+  var stringBlob = new Blob( [ pdb ], { type: 'text/plain'} );
   //fetch(file).then(response => response.text()).then(function(x){
     badids = badids.split(';').map(x => parseInt(x));
     badcomments = badcomments.split(';')
@@ -292,7 +299,7 @@ function readPDBFixedStyle(file, badids, badcomments){
     } 
     var idx = [...Array(matches.length).keys()]
     let diff = idx.filter(x => !badids.includes(x)) 
-    stage.loadFile(file).then(function(o){
+    stage.loadFile(stringBlob, {ext:"pdb"}).then(function(o){
       o.addRepresentation('ball+stick', {aspectRatio:0, radius:0,
                                            multipleBond:'symmetric'}); 
       atom_info = o.object.atomMap.dict;
@@ -621,7 +628,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setBadAtomsPDB", functi
     var pdb = message[0];
     window.pdbID = pdb;
     var stringBlob = new Blob( [ pdb ], { type: 'text/plain'});
-    stage.loadFile(stringBlob, { ext: "pdb" }).then(function (comp) {
+    stage.loadFile(stringBlob,{ext:"pdb"}).then(function (comp) {
       window.struc = comp.addRepresentation(message[1], {'linewidth':6, 'visible':false});
       if (message[2] === 'true') {
         comp.autoView(3000)
@@ -632,7 +639,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setBadAtomsPDB", functi
     }
     // Message[3] = badids string
     // message[4] = badcomments (if any)
-    readPDBFixedStyle(filestring=stringBlob,badids=message[3],badcomments=message[4]);
+    readPDBFixedStyle(file=message[0],badids=message[3],badcomments=message[4]);
 });
 
 // Its really odd...
@@ -647,7 +654,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setBadMolandfocus", fun
         comp.autoView(3000)
       }
     });
-    readFileFixedStyle(filestring=stringBlob,badids=message[3],badcomments=message[4]);
+    readFileFixedStyle(file=message[0],badids=message[3],badcomments=message[4]);
 });
 
 
