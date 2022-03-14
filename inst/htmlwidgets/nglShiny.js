@@ -280,7 +280,7 @@ function readFileFixedStyle(file, badids, badcomments){
     });
 };
 
-function readPDBFixedStyle(filestring, badids, badcomments){
+function readPDBFixedStyle(file, badids, badcomments){
   let x = file // Convert from string?
   //fetch(file).then(response => response.text()).then(function(x){
     badids = badids.split(';').map(x => parseInt(x));
