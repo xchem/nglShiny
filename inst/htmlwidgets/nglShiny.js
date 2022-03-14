@@ -140,6 +140,7 @@ const ELEMENT_COLORS = {
 };
 
 function drawStripyBond(atom_a, atom_b, color_a, color_b, label, size=0.1, shape, alt){
+  console.log('Drawing a Bond...')
   var sx = atom_b[0] - atom_a[0]; 
   var sy = atom_b[1] - atom_a[1];
   var sz = atom_b[2] - atom_a[2];
@@ -187,7 +188,6 @@ function readFileFixedStyle(file, badids, badcomments){
       for (var key in atom_info) {
           atom_info_array.push(key.split('|')[0]);
       }
-      o.autoView()
       // Draw Good Atoms + Bonds
       repr = o.addRepresentation('ball+stick',{
           aspectRatio:2, sele:'@'.concat(diff), multipleBond:'symmetric'});
@@ -254,6 +254,7 @@ function readFileFixedStyle(file, badids, badcomments){
       var bondComp = stage.addComponentFromObject(shape);
       // Render Atoms
       for(id in badids){
+        console.log('Drawing an Atom...')
         let origin = [o.object.atomStore.x[badids[id]], 
                       o.object.atomStore.y[badids[id]], 
                       o.object.atomStore.z[badids[id]]
@@ -277,7 +278,6 @@ function readFileFixedStyle(file, badids, badcomments){
         shapeComp.addRepresentation("buffer");
       };
     });
-  //});
 };
 
 function readPDBFixedStyle(filestring, badids, badcomments){
@@ -363,6 +363,7 @@ function readPDBFixedStyle(filestring, badids, badcomments){
       var bondComp = stage.addComponentFromObject(shape);
       // Render Atoms
       for(id in badids){
+        console.log('Drawing an Atom...')
         let origin = [o.object.atomStore.x[badids[id]], 
                       o.object.atomStore.y[badids[id]], 
                       o.object.atomStore.z[badids[id]]
@@ -385,7 +386,6 @@ function readPDBFixedStyle(filestring, badids, badcomments){
         shapeComp.addRepresentation("buffer");
       };
     });
-  //});
 };
 
 // readPDBFixedStyle('https://raw.githubusercontent.com/TJGorrie/FourMol/master/Mpro-x10555_0A/Mpro-x10555_0A_apo.pdb',badids = '1258;1259;1257;1256', badcomments = `a;b;c;d`)
