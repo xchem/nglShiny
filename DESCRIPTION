@@ -1,7 +1,7 @@
 Package: nglShiny
 Title: nglShiny
-Version: 0.99.13
-Date: 2020-05-12
+Version: 0.99.15
+Date: 2022-03-14
 Author: Paul Shannon
 Maintainer: Paul Shannon <paul.thurmond.shannon@gmail.com>
 Description: ngl.js as a shiny widget
