@@ -613,6 +613,8 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setPDB2", function(mess
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler('setBadAtomsPDB', function(message){
     stage.removeAllComponents();
+    console.log('Set Bad Atoms')
+    console.log([message[3], message[4]])
     // Assumption, message is R list of n objects
     var pdb = message[0];
     window.pdbID = pdb;
@@ -648,6 +650,8 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setBadMolandfocus", fun
 
 if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler("setapoPDB", function(message){
     stage.removeAllComponents();
+    console.log('Set Bad Mol')
+    console.log([message[3], message[4]])
     // Assumption, message is R list of n objects
     var pdb = message[0];
     window.pdbID = pdb;
