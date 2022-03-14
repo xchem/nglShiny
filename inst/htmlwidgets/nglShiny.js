@@ -1,4 +1,3 @@
-import Vector3 from "https://cdn.skypack.dev/three@0.132.2";
 HTMLWidgets.widget({
 
   name: 'nglShiny',
@@ -114,7 +113,7 @@ refmesh=[0.1,
 // Probably don't need all of these!
 // Divide these by 255...
       
-const ELEMENT_COLORS = {
+const ElementColors = {
   H: [255, 255, 255],
   HE: [217, 255, 255],
   LI: [204, 128, 255],
