@@ -2,6 +2,8 @@ dependencies:
   - name: igv
     version: 1.0.20
     src: htmlwidgets
-    script: ./lib/ngl.js
+    script: 
+    - ./lib/ngl.js
+    - ./lib/three.js
 
 
