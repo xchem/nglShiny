@@ -846,7 +846,7 @@ if(HTMLWidgets.shinyMode) Shiny.addCustomMessageHandler('addVolumeDensity', func
         negateIsolevel: message[3] === 'true',
         boxSize: parseFloat(message[5]),
         smooth: 10,
-        useWorker: true,
+        useWorker: false,
         contour: true,
         wrap: false
       }).setVisibility(message[6] === 'true');
