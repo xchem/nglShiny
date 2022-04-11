@@ -193,7 +193,7 @@ function readFileFixedStyle(file, badids, badcomments){
       }
       // Draw Good Atoms + Bonds
       repr = o.addRepresentation('ball+stick',{
-          aspectRatio:2, sele:'@'.concat(diff), multipleBond:'symmetric'});
+          aspectRatio:2, sele:'@'.concat(diff), multipleBond:'symmetric', colorValue='limegreen'});
 
 
       let shape = new NGL.Shape("shape", {dashedCylinder: true});
@@ -207,8 +207,6 @@ function readFileFixedStyle(file, badids, badcomments){
       o.object.getBondProxy().calculateShiftDir(vShift)
       vShift.multiplyScalar(absOffset)
       // Render Bonds
-      order[0] = 3
-      order[1] = 2
       n.forEach((num1, index) => {
         let vt = new THREE.Vector3()
         const num2 = m[index];
@@ -318,8 +316,6 @@ function readPDBFixedStyle(file, badids, badcomments){
       o.object.getBondProxy().calculateShiftDir(vShift)
       vShift.multiplyScalar(absOffset)
       // Render Bonds
-      order[0] = 3
-      order[1] = 2
       n.forEach((num1, index) => {
         let vt = new THREE.Vector3()
         const num2 = m[index];
